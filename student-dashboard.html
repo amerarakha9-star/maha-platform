@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>منصة Mme Maha Gafar التعليمية | لوحة الطالب</title>
+<link rel="icon" type="image/png" href="logo.png" />
+<link rel="apple-touch-icon" href="logo.png" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --france-blue: #0055A4;
+  --france-blue-light: #E3F2FD;
+  --france-blue-dark: #003366;
+  --white: #FFFFFF;
+  --text-dark: #1A1A2E;
+  --text-muted: #6B7B8D;
+}
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Cairo', sans-serif; }
+html { width:100%; }
+body { width:100%; min-height:100vh; }
+body {
+  background: linear-gradient(145deg, var(--france-blue-light) 0%, #BBDEFB 100%);
+  position:relative;
+}
+
+@keyframes fadeInUp { 0%{opacity:0;transform:translateY(30px);} 100%{opacity:1;transform:translateY(0);} }
+@keyframes floatY { 0%,100%{transform:translateY(0px);} 50%{transform:translateY(-10px);} }
+@keyframes pulseGlow { 0%,100%{box-shadow:0 0 20px rgba(0,85,164,0.3);} 50%{box-shadow:0 0 40px rgba(0,85,164,0.6);} }
+@keyframes slideInRight { 0%{opacity:0;transform:translateX(50px);} 100%{opacity:1;transform:translateX(0);} }
+@keyframes scaleIn { 0%{opacity:0;transform:scale(0.8);} 100%{opacity:1;transform:scale(1);} }
+@keyframes gradientMove { 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
+@keyframes sparkle { 0%,100%{opacity:1;transform:scale(1) rotate(0deg);} 50%{opacity:0.5;transform:scale(1.3) rotate(180deg);} }
+@keyframes shineSweep { 0%{transform:translateX(-120%) skewX(-20deg);} 100%{transform:translateX(220%) skewX(-20deg);} }
+@keyframes toastIn { 0%{opacity:0;transform:translateY(-30px) translateX(30px) scale(0.85);} 60%{opacity:1;transform:translateY(4px) scale(1.02);} 100%{opacity:1;transform:translateY(0) scale(1);} }
+@keyframes toastOut { 0%{opacity:1;transform:translateY(0) scale(1);} 100%{opacity:0;transform:translateY(-20px) scale(0.9);} }
+@keyframes blobMove {
+  0%,100%{transform:translate(0,0) scale(1) rotate(0deg);border-radius:42% 58% 65% 35%/45% 40% 60% 55%;}
+  50%{transform:translate(-3vw,4vh) scale(0.92) rotate(-15deg);border-radius:35% 65% 55% 45%/40% 55% 45% 60%;}
+}
+
+.blob-bg { position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
+.blob { position:absolute; filter:blur(50px); opacity:0.35; animation:blobMove 16s ease-in-out infinite; }
+.blob:nth-child(1){width:38vw;height:38vw;top:-10%;left:-8%;background:radial-gradient(circle at 30% 30%,#A2D9FF,var(--france-blue));}
+.blob:nth-child(2){width:30vw;height:30vw;bottom:-12%;right:-6%;background:radial-gradient(circle at 60% 40%,var(--france-blue-light),#A2D9FF);animation-duration:22s;}
+.blob:nth-child(3){width:26vw;height:26vw;top:35%;right:15%;background:radial-gradient(circle at 40% 60%,#BBDEFB,var(--france-blue));animation-duration:20s;}
+
+.floating-decor { position:fixed; font-size:50px; opacity:0.08; pointer-events:none; z-index:0; animation:floatY 6s ease-in-out infinite; }
+.floating-decor:nth-child(1){top:5%;left:2%;font-size:70px;color:var(--france-blue);}
+.floating-decor:nth-child(2){bottom:8%;right:2%;font-size:80px;animation-delay:1.5s;color:var(--france-blue-dark);}
+.floating-decor:nth-child(3){top:50%;left:1%;font-size:40px;animation-delay:3s;color:var(--france-blue);}
+.floating-decor:nth-child(4){top:30%;right:1%;font-size:55px;animation-delay:2s;color:var(--france-blue-dark);}
+
+/* ===== HEADER ===== */
+.header {
+  background: linear-gradient(135deg, var(--france-blue), var(--france-blue-dark), var(--france-blue));
+  background-size: 200% 200%;
+  animation: gradientMove 6s ease infinite;
+  padding: 16px 30px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 12px;
+  box-shadow: 0 4px 30px rgba(0,85,164,0.3);
+  position: sticky; top: 0; z-index: 100; width: 100%;
+  border-bottom: 3px solid rgba(255,255,255,0.2);
+}
+.header .logo-area { display:flex; align-items:center; gap:14px; }
+.header .logo-area .mini-logo {
+  width: 60px; height: 60px; background: rgba(255,255,255,0.95);
+  border-radius: 50%; display:flex; align-items:center; justify-content:center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.4s ease; cursor: pointer;
+  overflow: hidden; padding: 3px;
+}
+.header .logo-area .mini-logo:hover { transform: scale(1.1) rotate(-10deg); }
+.header .logo-area .mini-logo img {
+  width: 100%; height: 100%; object-fit: contain; border-radius: 50%;
+}
+.header .logo-area h2 { color: white; font-size: 22px; font-weight: 800; text-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.header .logo-area h2 span { font-weight: 400; font-size: 13px; opacity: 0.9; display: block; }
+
+.header .user-info {
+  background: rgba(255,255,255,0.2); backdrop-filter: blur(10px);
+  padding: 8px 22px; border-radius: 60px;
+  border: 1px solid rgba(255,255,255,0.3);
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  animation: pulseGlow 3s ease-in-out infinite;
+  transition: all 0.3s ease;
+}
+.header .user-info:hover { transform: scale(1.02); background: rgba(255,255,255,0.3); }
+.header .user-info .name { color: white; font-weight: 700; font-size: 17px; }
+.header .user-info .grade-badge {
+  background: rgba(255,255,255,0.95); color: var(--france-blue);
+  padding: 4px 18px; border-radius: 60px;
+  font-size: 13px; font-weight: 800;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.header .user-info .phone { color: rgba(255,255,255,0.85); font-size: 13px; }
+
+.header-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.btn-logout {
+  background: rgba(255,255,255,0.2); color: white;
+  border: 2px solid rgba(255,255,255,0.3);
+  padding: 8px 22px; border-radius: 60px;
+  cursor: pointer; font-weight: 700; font-size: 14px;
+  transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  backdrop-filter: blur(5px); font-family: inherit;
+}
+.btn-logout:hover {
+  background: #ff6b6b; border-color: #ff6b6b;
+  transform: scale(1.04) translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255,107,107,0.3);
+}
+
+/* ===== MAIN ===== */
+.main-content {
+  width: 100%; max-width: 1400px;
+  margin: 30px auto; padding: 0 25px;
+  animation: fadeInUp 0.6s ease-out;
+}
+.welcome-section {
+  background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+  border-radius: 28px; padding: 30px 40px; margin-bottom: 32px;
+  box-shadow: 0 8px 32px rgba(0,85,164,0.08);
+  border: 1px solid rgba(0,85,164,0.15);
+  transition: all 0.4s ease;
+  animation: slideInRight 0.6s ease-out;
+}
+.welcome-section:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 48px rgba(0,85,164,0.15);
+  border-color: var(--france-blue);
+}
+.welcome-section h2 { color: #1a2a4a; font-size: 28px; font-weight: 800; }
+.welcome-section h2 span { color: var(--france-blue); position: relative; }
+.welcome-section h2 span::after {
+  content: '🌟'; font-size: 20px; position: absolute;
+  top: -8px; left: -35px; animation: sparkle 3s ease-in-out infinite;
+}
+.welcome-section p { color: var(--text-muted); margin-top: 6px; font-size: 16px; font-weight: 500; }
+
+.my-stage-banner {
+  background: linear-gradient(135deg, var(--france-blue), var(--france-blue-dark));
+  border-radius: 24px; padding: 20px 28px; margin-bottom: 24px;
+  display: flex; align-items: center; gap: 16px;
+  color: white;
+  box-shadow: 0 10px 35px rgba(0,85,164,0.35);
+  animation: fadeInUp 0.6s ease-out 0.1s both;
+  position: relative; overflow: hidden;
+}
+.my-stage-banner::before {
+  content: ''; position: absolute; top: -50%; right: -20%;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(255,255,255,0.25), transparent 70%);
+  border-radius: 50%;
+  animation: floatY 4s ease-in-out infinite;
+}
+.my-stage-banner .stage-icon {
+  width: 60px; height: 60px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 18px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; flex-shrink: 0;
+  position: relative; z-index: 1;
+  backdrop-filter: blur(10px);
+}
+.my-stage-banner .stage-text { flex: 1; position: relative; z-index: 1; }
+.my-stage-banner .stage-text .label { font-size: 12px; opacity: 0.9; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+.my-stage-banner .stage-text .value { font-size: 22px; font-weight: 800; margin-top: 2px; }
+.my-stage-banner .stage-badge {
+  background: rgba(255,255,255,0.95); color: var(--france-blue);
+  padding: 8px 20px; border-radius: 60px;
+  font-weight: 800; font-size: 14px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  position: relative; z-index: 1;
+}
+
+.grid-icons {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 24px; margin-top: 10px;
+}
+.icon-card {
+  background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+  border-radius: 28px; padding: 30px 18px 24px;
+  text-align: center;
+  box-shadow: 0 4px 18px rgba(0,85,164,0.06);
+  cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  border: 2px solid transparent;
+  position: relative; overflow: hidden;
+  animation: fadeInUp 0.6s ease-out both;
+}
+.icon-card:nth-child(1){animation-delay:0.05s;}
+.icon-card:nth-child(2){animation-delay:0.1s;}
+.icon-card:nth-child(3){animation-delay:0.15s;}
+.icon-card:nth-child(4){animation-delay:0.2s;}
+.icon-card:nth-child(5){animation-delay:0.25s;}
+.icon-card:nth-child(6){animation-delay:0.3s;}
+.icon-card::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(145deg, var(--france-blue-light), #BBDEFB);
+  opacity: 0; transition: all 0.5s ease; border-radius: 26px;
+}
+.icon-card:hover::before { opacity: 1; }
+.icon-card:hover {
+  transform: translateY(-14px) scale(1.03);
+  border-color: var(--france-blue);
+  box-shadow: 0 24px 56px rgba(0,85,164,0.2);
+}
+.icon-card .icon-wrapper {
+  width: 80px; height: 80px; margin: 0 auto 14px;
+  border-radius: 24px; display: flex; align-items: center; justify-content: center;
+  font-size: 36px; position: relative; z-index: 1;
+  transition: all 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.icon-card:hover .icon-wrapper { transform: scale(1.1) rotate(-5deg); }
+.icon-card .icon-wrapper i { font-size: 36px; }
+.icon-card .title { font-weight: 800; color: #1a2a4a; font-size: 16px; position: relative; z-index: 1; transition: all 0.3s ease; }
+.icon-card:hover .title { color: var(--france-blue); }
+.icon-card .sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; position: relative; z-index: 1; font-weight: 500; }
+
+.icon-card.courses .icon-wrapper { background: linear-gradient(135deg, #A29BFE, #6C5CE7); color: white; }
+.icon-card.sessions .icon-wrapper { background: linear-gradient(135deg, #74B9FF, #0984E3); color: white; }
+.icon-card.recorded .icon-wrapper { background: linear-gradient(135deg, #FD79A8, #E84393); color: white; }
+.icon-card.homework .icon-wrapper { background: linear-gradient(135deg, #00B894, #00A381); color: white; }
+.icon-card.quiz .icon-wrapper { background: linear-gradient(135deg, #FDCB6E, #F39C12); color: white; }
+.icon-card.my-stage .icon-wrapper { background: linear-gradient(135deg, var(--france-blue), var(--france-blue-dark)); color: white; }
+
+.shine-sweep {
+  position: absolute; top: 0; left: 0; width: 60%; height: 100%;
+  background: linear-gradient(90deg,transparent,rgba(255,255,255,0.55),transparent);
+  transform: translateX(-120%) skewX(-20deg);
+  pointer-events: none; z-index: 2;
+}
+.icon-card:hover .shine-sweep { animation: shineSweep 0.9s ease; }
+
+/* ===== CONTENT LIST ===== */
+.content-list { margin-top: 30px; }
+.content-list h3 { color: #1a2a4a; font-size: 22px; font-weight: 800; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
+.content-list .item {
+  background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+  border-radius: 20px; padding: 18px 24px; margin-bottom: 14px;
+  display: flex; justify-content: space-between; align-items: center;
+  border: 2px solid transparent; cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: 0 4px 18px rgba(0,85,164,0.06);
+}
+.content-list .item:hover { transform: translateX(10px) scale(1.01); border-color: var(--france-blue); box-shadow: 0 12px 40px rgba(0,85,164,0.15); }
+.content-list .item .info { flex: 1; }
+.content-list .item .info h4 { color: #1a2a4a; font-size: 16px; font-weight: 800; }
+.content-list .item .info p { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
+.content-list .item .info .badge { display: inline-block; background: var(--france-blue-light); color: var(--france-blue); padding: 2px 14px; border-radius: 60px; font-size: 11px; font-weight: 700; margin-top: 6px; }
+.content-list .item .action-btn {
+  background: linear-gradient(135deg, var(--france-blue), var(--france-blue-dark));
+  color: white; border: none; padding: 8px 20px; border-radius: 60px;
+  font-weight: 700; font-size: 13px; cursor: pointer;
+  transition: all 0.3s ease; font-family: inherit;
+}
+.content-list .item .action-btn:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(0,85,164,0.3); }
+.content-list .empty-state {
+  text-align: center; padding: 40px 20px;
+  background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+  border-radius: 24px; color: var(--text-muted);
+}
+.content-list .empty-state .icon { font-size: 50px; margin-bottom: 12px; }
+.content-list .empty-state h4 { color: #1a2a4a; margin-bottom: 6px; }
+
+.footer-note {
+  text-align: center; color: var(--text-muted); margin-top: 45px;
+  font-size: 14px; border-top: 2px solid rgba(0,85,164,0.15);
+  padding-top: 22px; font-weight: 500;
+}
+.footer-note span { color: var(--france-blue); font-weight: 700; }
+.footer-note .fb-link { color:#1877f2; font-weight:700; text-decoration:none; transition:opacity .2s; }
+.footer-note .fb-link:hover { opacity:.75; text-decoration:underline; }
+
+#toastContainer {
+  position: fixed; top: 22px; left: 22px; z-index: 9999;
+  display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+}
+.toast {
+  pointer-events: auto; min-width: 220px; max-width: 340px;
+  background: rgba(255,255,255,0.95); backdrop-filter: blur(14px);
+  border-radius: 18px; padding: 14px 20px;
+  box-shadow: 0 14px 40px rgba(0,85,164,0.28);
+  border: 1px solid rgba(0,85,164,0.35);
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 700; font-size: 14px; color: #1a2a4a;
+  animation: toastIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  border-right: 5px solid var(--france-blue);
+}
+.toast.success { border-right-color: #00b894; }
+.toast.error { border-right-color: #ff6b6b; }
+.toast.info { border-right-color: var(--france-blue); }
+.toast .toast-icon { font-size: 20px; flex-shrink: 0; }
+.toast.toast-hide { animation: toastOut 0.35s ease forwards; }
+
+@media (max-width:768px){
+  .grid-icons { grid-template-columns: repeat(2,1fr); gap: 16px; }
+  .icon-card .icon-wrapper { width: 64px; height: 64px; font-size: 28px; }
+  .icon-card .icon-wrapper i { font-size: 28px; }
+  .welcome-section { padding: 22px 20px; }
+  .welcome-section h2 { font-size: 22px; }
+  .header .logo-area h2 { font-size: 18px; }
+  .header .user-info .name { font-size: 15px; }
+  .header .user-info .grade-badge { font-size: 11px; padding: 2px 12px; }
+  .my-stage-banner { padding: 16px 20px; }
+  .my-stage-banner .stage-icon { width: 50px; height: 50px; font-size: 24px; }
+  .my-stage-banner .stage-text .value { font-size: 18px; }
+}
+@media (max-width:600px){
+  .header { flex-direction: column; text-align: center; padding: 14px 18px; }
+  .header .user-info { justify-content: center; width: 100%; padding: 8px 14px; }
+  .header-actions { width: 100%; justify-content: center; }
+  .grid-icons { grid-template-columns: repeat(2,1fr); gap: 14px; }
+  .icon-card { padding: 20px 12px 18px; }
+  .icon-card .icon-wrapper { width: 56px; height: 56px; font-size: 24px; }
+  .icon-card .icon-wrapper i { font-size: 24px; }
+  .icon-card .title { font-size: 14px; }
+  .welcome-section h2 { font-size: 20px; }
+  .welcome-section h2 span::after { display: none; }
+  .floating-decor { display: none; }
+  .main-content { padding: 0 12px; margin: 15px auto; }
+}
+
+
+
+/* ================================================================
+   PRO ENHANCEMENT PACK — extra motion, polish & eye-catching detail
+   ================================================================ */
+html { scroll-behavior: smooth; }
+
+@keyframes pageFadeIn { 0%{opacity:0;} 100%{opacity:1;} }
+body.__pro_ready { animation: pageFadeIn .7s ease both; }
+
+@keyframes shimmerText {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+.welcome-section h2 span {
+  background: linear-gradient(90deg, var(--france-blue) 0%, #7ec8ff 25%, var(--france-blue) 50%, #7ec8ff 75%, var(--france-blue) 100%);
+  background-size: 300% auto;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  animation: shimmerText 4.5s linear infinite;
+}
+
+
+@keyframes rippleFx { to { transform: scale(3.2); opacity: 0; } }
+.pro-ripple {
+  position:absolute; border-radius:50%; pointer-events:none;
+  background: rgba(255,255,255,.55); transform: scale(0);
+  animation: rippleFx .65s ease-out;
+}
+button, .btn-primary, .choice-btn, .btn-logout, .icon-card {
+  position: relative; overflow: hidden;
+}
+
+@keyframes cardTiltIn {
+  0%   { opacity:0; transform: perspective(800px) rotateX(8deg) translateY(35px) scale(.94); }
+  100% { opacity:1; transform: perspective(800px) rotateX(0) translateY(0) scale(1); }
+}
+.container, .welcome-section, .my-stage-banner, .stat-card, .content-card {
+  animation: cardTiltIn .7s cubic-bezier(.22,1,.36,1) both;
+}
+
+@keyframes glowPulseSoft {
+  0%,100% { box-shadow: 0 0 0 rgba(0,0,0,0); }
+  50% { box-shadow: 0 0 28px rgba(0,85,164,.2); }
+}
+.btn-primary, .choice-btn { animation: glowPulseSoft 3.2s ease-in-out infinite; }
+
+/* micro-interaction: gentle lift + glow on any interactive icon card */
+.icon-card, .choice-btn, .btn-primary {
+  transition: transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s ease, filter .35s ease;
+}
+.icon-card:hover, .choice-btn:hover { filter: brightness(1.04) saturate(1.08); }
+
+/* smoother, more premium focus ring */
+input:focus, select:focus, textarea:focus {
+  outline: none;
+}
+
+
+/* scrollbar polish */
+
+
+
+
+
+
+/* WhatsApp group banner */
+.icon-card.whatsapp{grid-column:1/-1;display:flex;align-items:center;gap:20px;text-align:right;text-decoration:none;color:#fff;
+  background:linear-gradient(135deg,#25D366,#128C7E);border-color:transparent;padding:22px 28px;border-radius:30px;
+  box-shadow:0 12px 34px rgba(18,140,126,.35);}
+.icon-card.whatsapp::before{display:none;}
+.icon-card.whatsapp:hover{transform:translateY(-6px) scale(1.01);border-color:rgba(255,255,255,.6);box-shadow:0 20px 48px rgba(18,140,126,.5);}
+.wa-ban-ic{position:relative;width:72px;height:72px;border-radius:50%;background:#fff;color:#25D366;display:flex;align-items:center;justify-content:center;font-size:42px;flex-shrink:0;z-index:1;}
+.wa-ban-ic i{font-size:42px;}
+.wa-ring{position:absolute;inset:0;border-radius:50%;border:3px solid rgba(255,255,255,.7);animation:waRing 2.2s ease-out infinite;}
+@keyframes waRing{0%{transform:scale(1);opacity:.9;}100%{transform:scale(1.6);opacity:0;}}
+.wa-ban-txt{flex:1;min-width:0;position:relative;z-index:1;}
+.icon-card.whatsapp .title,.icon-card.whatsapp:hover .title{color:#fff;font-size:21px;font-weight:900;}
+.icon-card.whatsapp .sub{color:rgba(255,255,255,.92);font-size:14px;font-weight:600;margin-top:4px;line-height:1.7;}
+.wa-ban-cta{position:relative;z-index:1;background:#fff;color:#128C7E;font-weight:900;font-size:15px;padding:12px 24px;border-radius:60px;display:inline-flex;align-items:center;gap:10px;flex-shrink:0;transition:all .3s ease;box-shadow:0 6px 16px rgba(0,0,0,.15);}
+.icon-card.whatsapp:hover .wa-ban-cta{transform:translateX(-4px);}
+@media (max-width:600px){
+  .icon-card.whatsapp{flex-wrap:wrap;padding:18px;gap:14px;border-radius:24px;}
+  .wa-ban-ic{width:58px;height:58px;}.wa-ban-ic i{font-size:34px;}
+  .icon-card.whatsapp .title{font-size:17px;}
+  .wa-ban-cta{width:100%;justify-content:center;}
+}
+/* responsive */
+.main-content { width: 100%; }
+@media (min-width: 1100px) { .grid-icons { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); } }
+
+/* ===== Scrollbar (fixed) ===== */
+html{overflow-x:hidden;}
+body{overflow-x:visible;}
+::-webkit-scrollbar{width:12px;height:12px;}
+::-webkit-scrollbar-track{background:#E3F2FD;border-radius:12px;}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#0055A4,#003366);border-radius:12px;border:3px solid #E3F2FD;min-height:48px;}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#003366,#003366);}
+::-webkit-scrollbar-corner{background:transparent;}
+@supports not selector(::-webkit-scrollbar){ *{scrollbar-width:thin;scrollbar-color:#0055A4 #E3F2FD;} }
+::selection{background:rgba(0,85,164,.35);color:inherit;}
+
+/* ===== رفع الواجبات + أزرار متعددة ===== */
+.content-list .item { gap: 12px; flex-wrap: wrap; }
+.content-list .item .btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.content-list .item .action-btn.upload { background: linear-gradient(135deg, #00b894, #00836a); }
+.content-list .item .action-btn.upload:hover { box-shadow: 0 6px 20px rgba(0,184,148,0.35); }
+.content-list .item .action-btn.danger { background: linear-gradient(135deg, #ff6b6b, #c0392b); }
+.content-list .item .badge.done { background: #E8F5E9; color: #2E7D32; margin-right: 5px; }
+.content-list .sub-card {
+  background: rgba(255,255,255,0.95); border-radius: 20px; padding: 16px 22px; margin-bottom: 18px;
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  border: 2px dashed #90CAF9; box-shadow: 0 4px 18px rgba(0,85,164,0.06);
+}
+.content-list .sub-card:not(.empty) { border-style: solid; border-color: #A5D6A7; background: #F4FBF5; }
+.content-list .sub-card .sub-ic { font-size: 28px; }
+.content-list .sub-card .sub-info { flex: 1; min-width: 180px; }
+.content-list .sub-card .sub-info h4 { color: #1a2a4a; font-size: 15px; font-weight: 800; }
+.content-list .sub-card .sub-info p { color: var(--text-muted); font-size: 12.5px; margin-top: 3px; line-height: 1.8; word-break: break-word; }
+.content-list .sub-card .action-btn {
+  background: linear-gradient(135deg, #ff6b6b, #c0392b); color: white; border: none; padding: 8px 18px;
+  border-radius: 60px; font-weight: 700; font-size: 13px; cursor: pointer; font-family: inherit;
+}
+.cf-overlay{--cf-main:#0055A4;--cf-dark:#003366;--cf-soft:#E3F2FD;}
+
+/* ===== مودال التأكيد (بديل confirm) ===== */
+.cf-overlay{position:fixed;inset:0;z-index:10000;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.5);backdrop-filter:blur(5px);}
+.cf-overlay.active{display:flex;animation:cfFade .25s ease;}
+.cf-box{background:#fff;border-radius:28px;max-width:430px;width:100%;max-height:90vh;overflow-y:auto;padding:30px 26px 24px;text-align:center;box-shadow:0 25px 60px rgba(0,0,0,.3);animation:cfPop .35s cubic-bezier(.34,1.56,.64,1);}
+.cf-icon{width:68px;height:68px;margin:0 auto 14px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;background:var(--cf-soft);}
+.cf-box h3{font-size:21px;font-weight:800;color:var(--cf-dark);margin-bottom:10px;}
+.cf-text{color:#4a5568;font-size:14.5px;font-weight:600;line-height:1.9;}
+.cf-text ul{list-style:none;margin:12px 0 4px;padding:0;text-align:right;}
+.cf-text li{background:var(--cf-soft);border-radius:12px;padding:8px 14px;margin-bottom:6px;font-size:14px;}
+.cf-text .cf-warn{background:#FFF8E1;color:#8a5a00;border:1px solid #FFE3A3;border-radius:12px;padding:8px 12px;margin-top:10px;font-size:13px;}
+.cf-btns{display:flex;gap:10px;margin-top:22px;}
+.cf-btn{flex:1;padding:13px 10px;border:none;border-radius:60px;font-family:inherit;font-size:15px;font-weight:800;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .25s ease;}
+.cf-btn:hover{transform:translateY(-2px);}
+.cf-btn:focus-visible{outline:3px solid var(--cf-main);outline-offset:2px;}
+.cf-no{background:#EEF1F5;color:#4a5568;}
+.cf-ok{background:linear-gradient(135deg,var(--cf-main),var(--cf-dark));color:#fff;box-shadow:0 6px 18px rgba(0,0,0,.18);}
+.cf-ok.danger{background:linear-gradient(135deg,#EF4135,#B71C1C);}
+@keyframes cfFade{0%{opacity:0;}100%{opacity:1;}}
+@keyframes cfPop{0%{opacity:0;transform:scale(.8);}100%{opacity:1;transform:scale(1);}}
+</style>
+</head>
+<body>
+
+<div class="blob-bg"><div class="blob"></div><div class="blob"></div><div class="blob"></div></div>
+<div id="toastContainer"></div>
+<div class="floating-decor">🌸</div>
+<div class="floating-decor">📚</div>
+<div class="floating-decor">✨</div>
+<div class="floating-decor">🎓</div>
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+  <div class="logo-area">
+    <div class="mini-logo" onclick="window.location.href='index.html'">
+      <img src="logo.png" alt="Mme Maha Gafar" />
+    </div>
+    <h2>Mme Maha Gafar <span>| French Teacher</span></h2>
+  </div>
+  <div class="user-info" id="userInfo">
+    <span class="name" id="userName">طالب</span>
+    <span class="grade-badge" id="userGrade">G3</span>
+    <span class="phone" id="userPhone">📱</span>
+  </div>
+  <div class="header-actions">
+    <button class="btn-logout" onclick="handleLogout()">🚪 خروج</button>
+  </div>
+</header>
+
+<!-- ===== MAIN ===== -->
+<div class="main-content">
+  <div class="welcome-section">
+    <h2>👋 مرحباً بكَ، <span id="welcomeName">طالب</span></h2>
+    <p>📌 اختر من الأيقونات أدناه للوصول إلى المحتوى والخدمات</p>
+  </div>
+
+  <!-- ===== MY STAGE BANNER ===== -->
+  <div class="my-stage-banner" id="myStageBanner">
+    <div class="stage-icon" id="stageIcon">📚</div>
+    <div class="stage-text">
+      <div class="label">مرحلتي الدراسية</div>
+      <div class="value" id="stageValue">جاري التحميل...</div>
+    </div>
+    <div class="stage-badge" id="stageBadge">--</div>
+  </div>
+
+  <!-- ===== ICONS GRID ===== -->
+  <div class="grid-icons" id="iconsGrid">
+    <!-- سيتم توليد الأيقونات ديناميكياً هنا -->
+  </div>
+
+  <!-- ===== CONTENT DISPLAY SECTION ===== -->
+  <div id="contentSection" class="content-list" style="display:none;">
+    <h3 id="contentTitle">📚 المحتوى</h3>
+    <div id="contentItems"></div>
+  </div>
+  <input type="file" id="hwFileInput" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp" style="display:none;" onchange="onHomeworkFileChosen(this)" />
+
+  <div class="footer-note">
+    <a href="https://www.facebook.com/share/1Go7UTZ6hu/" target="_blank" rel="noopener noreferrer" class="fb-link"><i class="fab fa-facebook"></i> تابعنا على فيسبوك</a> — <span>تعليم الفرنسية بكل حب</span> 🌸
+  </div>
+</div>
+
+<div class="cf-overlay" id="cfOverlay" role="dialog" aria-modal="true" aria-labelledby="cfTitle">
+  <div class="cf-box">
+    <div class="cf-icon" id="cfIcon">🌸</div>
+    <h3 id="cfTitle">تأكيد</h3>
+    <div class="cf-text" id="cfText"></div>
+    <div class="cf-btns">
+      <button type="button" class="cf-btn cf-no" id="cfNo">إلغاء</button>
+      <button type="button" class="cf-btn cf-ok" id="cfOk">تأكيد</button>
+    </div>
+  </div>
+</div>
+
+<script src="api.js"></script>
+<script>
+if (!getToken()) {
+  window.location.href = 'student-login.html';
+}
+let serverData = null;      // آخر بيانات جت من السيرفر (الطالب + الحصص + الواجبات + الاختبارات + تسليمه)
+
+const STAGE_MAP = {
+  'G1':  { name: 'الصف الأول الابتدائي',  short: 'G1',  icon: '📕' },
+  'G2':  { name: 'الصف الثاني الابتدائي', short: 'G2',  icon: '📗' },
+  'G3':  { name: 'الصف الثالث الابتدائي', short: 'G3',  icon: '📖' },
+  'G4':  { name: 'الصف الرابع الابتدائي', short: 'G4',  icon: '📘' },
+  'G5':  { name: 'الصف الخامس الابتدائي', short: 'G5',  icon: '📙' },
+  'G6':  { name: 'الصف السادس الابتدائي', short: 'G6',  icon: '📕' },
+  'PR1': { name: 'الصف الأول الإعدادي',   short: 'PR1', icon: '📗' },
+  'PR2': { name: 'الصف الثاني الإعدادي',  short: 'PR2', icon: '📔' },
+  'PR3': { name: 'الصف الثالث الإعدادي',  short: 'PR3', icon: '📒' },
+  'S1':  { name: 'الصف الأول الثانوي',    short: 'S1',  icon: '🎓' },
+  'S2':  { name: 'الصف الثاني الثانوي',   short: 'S2',  icon: '🎓' },
+  'S3':  { name: 'الصف الثالث الثانوي',   short: 'S3',  icon: '🎓' },
+  'COURSES': { name: 'كورسات', short: 'COURSES', icon: '🎯' }
+};
+
+const STAGE_CONTENT = {
+  'G1':  { title: 'الصف الأول الابتدائي',  sub: 'Primary 1',   iconClass: 'my-stage' },
+  'G2':  { title: 'الصف الثاني الابتدائي', sub: 'Primary 2',   iconClass: 'my-stage' },
+  'G3':  { title: 'الصف الثالث الابتدائي', sub: 'Primary 3',   iconClass: 'my-stage' },
+  'G4':  { title: 'الصف الرابع الابتدائي', sub: 'Primary 4',   iconClass: 'my-stage' },
+  'G5':  { title: 'الصف الخامس الابتدائي', sub: 'Primary 5',   iconClass: 'my-stage' },
+  'G6':  { title: 'الصف السادس الابتدائي', sub: 'Primary 6',   iconClass: 'my-stage' },
+  'PR1': { title: 'الصف الأول الإعدادي',   sub: 'Prep 1',      iconClass: 'my-stage' },
+  'PR2': { title: 'الصف الثاني الإعدادي',  sub: 'Prep 2',      iconClass: 'my-stage' },
+  'PR3': { title: 'الصف الثالث الإعدادي',  sub: 'Prep 3',      iconClass: 'my-stage' },
+  'S1':  { title: 'الصف الأول الثانوي',    sub: 'Secondary 1', iconClass: 'my-stage' },
+  'S2':  { title: 'الصف الثاني الثانوي',   sub: 'Secondary 2', iconClass: 'my-stage' },
+  'S3':  { title: 'الصف الثالث الثانوي',   sub: 'Secondary 3', iconClass: 'my-stage' },
+  'COURSES': { title: 'الكورسات', sub: 'Courses', iconClass: 'my-stage' }
+};
+
+function getContent() {
+  const d = serverData || {};
+  const grade = (currentStudent && (currentStudent.gradeShort || currentStudent.grade)) || '';
+  return {
+    stage: [],
+    lessons: d.lessons || [],
+    homework: d.homework || [],
+    quiz: d.quiz || [],
+    whatsapp: d.whatsapp ? { [grade]: d.whatsapp } : {}
+  };
+}
+
+function showToast(message, type='info') {
+  const container = document.getElementById('toastContainer');
+  const icons = { success:'✅', error:'⚠️', info:'💬' };
+  const toast = document.createElement('div');
+  toast.className = 'toast ' + type;
+  toast.innerHTML = `<span class="toast-icon">${icons[type]||'💬'}</span><span>${message}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add('toast-hide');
+    setTimeout(() => toast.remove(), 400);
+  }, 3200);
+}
+
+let currentStudent = null;
+
+let lastFetch = 0;
+async function fetchData() {
+  const d = await API.studentData();
+  serverData = d;
+  currentStudent = Object.assign({}, d.student, { gradeShort: d.student.gradeShort || d.student.grade });
+  lastFetch = Date.now();
+  return d;
+}
+
+async function loadUserData() {
+  try {
+    await fetchData();
+  } catch (e) {
+    document.getElementById('stageValue').textContent = 'تعذّر التحميل — حدّثي الصفحة';
+    showToast('⚠️ ' + escapeHtml(e.message), 'error');
+    return;
+  }
+  const user = currentStudent;
+  try { localStorage.setItem('currentUser', JSON.stringify(user)); } catch (e) {}
+  document.getElementById('userName').textContent = user.name || 'طالب';
+  document.getElementById('userGrade').textContent = user.gradeShort || user.grade || 'G3';
+  document.getElementById('userPhone').textContent = '📱 ' + (user.phone || '');
+  document.getElementById('welcomeName').textContent = user.name ? user.name.split(' ')[0] : 'طالب';
+
+  const stageCode = user.gradeShort || user.grade || 'G3';
+  const stage = STAGE_MAP[stageCode] || STAGE_MAP['G3'];
+  document.getElementById('stageIcon').textContent = stage.icon;
+  document.getElementById('stageValue').textContent = stage.name;
+  document.getElementById('stageBadge').textContent = stageCode;
+
+  renderStudentIcons(stageCode);
+}
+
+function renderStudentIcons(stageCode) {
+  const content = STAGE_CONTENT[stageCode] || STAGE_CONTENT['G3'];
+  const grid = document.getElementById('iconsGrid');
+
+  // ✅ تم حذف أيقونة "الكورسات" من القائمة
+  const commonIcons = [
+    { cls: 'recorded', icon: 'fas fa-play-circle',   title: 'الحصص المسجلة', sub: 'مشاهدة التسجيلات', action: "showContent('lessons')" },
+    { cls: 'sessions', icon: 'fas fa-video',         title: 'دخول الحصص',     sub: 'حصص مباشرة',       action: "showContent('live')" },
+    { cls: 'homework', icon: 'fas fa-upload',        title: 'رفع الواجبات',   sub: 'تسليم الواجبات',   action: "showContent('homework')" },
+    { cls: 'quiz',     icon: 'fas fa-pencil-alt',    title: 'Quizzes',         sub: 'اختبارات',         action: "showContent('quiz')" }
+  ];
+
+  const myStageCard = `
+    <div class="icon-card my-stage" onclick="showContent('stage')">
+      <div class="shine-sweep"></div>
+      <div class="icon-wrapper"><i class="fas fa-graduation-cap"></i></div>
+      <div class="title">${content.title}</div>
+      <div class="sub">${content.sub} · محتوى مرحلتي</div>
+    </div>`;
+
+  const commonHTML = commonIcons.map(ic => `
+    <div class="icon-card ${ic.cls}" onclick="${ic.action}">
+      <div class="shine-sweep"></div>
+      <div class="icon-wrapper"><i class="${ic.icon}"></i></div>
+      <div class="title">${ic.title}</div>
+      <div class="sub">${ic.sub}</div>
+    </div>
+  `).join('');
+
+  const waLink = (getContent().whatsapp || {})[stageCode];
+  const waHTML = (waLink && /^https:\/\//i.test(waLink)) ? `
+    <a class="icon-card whatsapp" href="${encodeURI(waLink)}" target="_blank" rel="noopener noreferrer">
+      <div class="shine-sweep"></div>
+      <div class="wa-ban-ic"><i class="fab fa-whatsapp"></i><span class="wa-ring"></span></div>
+      <div class="wa-ban-txt">
+        <div class="title">جروب الواتساب</div>
+        <div class="sub">انضم لجروب الصف وتابع كل جديد مع Mme Maha</div>
+      </div>
+      <span class="wa-ban-cta">انضم الآن <i class="fas fa-arrow-left"></i></span>
+    </a>` : '';
+
+  grid.innerHTML = myStageCard + commonHTML + waHTML;
+}
+
+/* ===== أدوات آمنة ===== */
+function safeUrl(u) {
+  const s = String(u == null ? '' : u).trim();
+  return /^https?:\/\//i.test(s) ? s : '';
+}
+function escapeHtml(str) {
+  if (str === undefined || str === null) return '';
+  return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+function openExternal(url) {
+  const u = safeUrl(url);
+  if (!u) { showToast('📌 لا يوجد محتوى قابل للعرض', 'info'); return; }
+  window.open(u, '_blank', 'noopener,noreferrer');
+}
+
+/* ===== تسليم الواجبات (ملف واحد لكل طالب، التسليم الجديد بيمسح القديم) ===== */
+const MAX_FILE_BYTES = 5 * 1024 * 1024; // 5MB
+const ALLOWED_EXT = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png', 'webp'];
+let pendingHwId = null;
+let busy = false;
+
+function getMySubmission() { return (serverData && serverData.submission) || null; }
+
+function startHomeworkUpload(hwId) {
+  if (busy) { showToast('⏳ استني لحد ما العملية الحالية تخلص', 'info'); return; }
+  pendingHwId = hwId;
+  const inp = document.getElementById('hwFileInput');
+  inp.value = '';
+  inp.click();
+}
+
+async function onHomeworkFileChosen(input) {
+  const file = input.files && input.files[0];
+  input.value = '';
+  const hwId = pendingHwId;
+  pendingHwId = null;
+  if (!file || hwId === null) return;
+
+  const ext = (file.name.split('.').pop() || '').toLowerCase();
+  if (!ALLOWED_EXT.includes(ext)) {
+    showToast('نوع الملف غير مدعوم — ارفعي PDF أو Word أو صورة', 'error'); return;
+  }
+  if (file.size > MAX_FILE_BYTES) {
+    showToast('الملف أكبر من 5 ميجا، صغّري حجمه وحاولي تاني', 'error'); return;
+  }
+
+  busy = true;
+  const hadPrev = !!getMySubmission();
+  showToast('⏳ جاري رفع الواجب، استني لحظات...', 'info');
+  try {
+    await API.submitHomework(hwId, file);
+    await fetchData();
+    showToast(hadPrev ? '✅ تم رفع الواجب واستبدال تسليمك السابق' : '✅ تم رفع الواجب بنجاح', 'success');
+    showContent('homework', true);
+  } catch (e) {
+    showToast('⚠️ ' + escapeHtml(e.message), 'error');
+  } finally {
+    busy = false;
+  }
+}
+
+async function deleteMySubmission() {
+  if (busy) return;
+  const ok = await confirmDialog({
+    icon: '🗑️', title: 'حذف التسليم',
+    text: 'هل تريد حذف تسليمك الحالي؟ تقدر ترفع واجب جديد بعدها.',
+    okText: 'حذف التسليم', cancelText: 'إلغاء', danger: true
+  });
+  if (!ok) return;
+  busy = true;
+  try {
+    await API.deleteSubmission();
+    await fetchData();
+    showToast('🗑️ تم حذف التسليم', 'info');
+    showContent('homework', true);
+  } catch (e) {
+    showToast('⚠️ ' + escapeHtml(e.message), 'error');
+  } finally {
+    busy = false;
+  }
+}
+
+function submissionCardHtml() {
+  const sub = getMySubmission();
+  if (!sub) {
+    return `<div class="sub-card empty"><div class="sub-ic">📎</div><div class="sub-info"><h4>لم ترفع أي واجب بعد</h4><p>اضغط «📤 رفع حلّي» بجوار الواجب المطلوب (PDF أو Word أو صورة حتى 5 ميجا). رفع واجب جديد بيحذف تسليمك السابق تلقائياً.</p></div></div>`;
+  }
+  const d = sub.date ? new Date(sub.date).toLocaleDateString('ar-EG') : '';
+  return `<div class="sub-card"><div class="sub-ic">✅</div><div class="sub-info"><h4>تسليمي الحالي</h4><p>📎 ${escapeHtml(sub.fileName)}${sub.homeworkTitle ? ' • 📌 ' + escapeHtml(sub.homeworkTitle) : ''}${d ? ' • 📅 ' + d : ''}<br>رفع واجب جديد هيحذف هذا التسليم تلقائياً.</p></div><button type="button" class="action-btn" data-act="del-sub">🗑️ حذف</button></div>`;
+}
+
+/* ===== عرض المحتوى ===== */
+function itemHtml(item, type, mySub) {
+  const url = safeUrl(item.link);
+  const dateTxt = item.date && !isNaN(new Date(item.date)) ? new Date(item.date).toLocaleDateString('ar-EG') : '';
+  const done = type === 'homework' && mySub && String(mySub.homeworkId) === String(item.id);
+  return `
+    <div class="item" data-url="${escapeHtml(url)}">
+      <div class="info">
+        <h4>${escapeHtml(item.title)}</h4>
+        <p>${escapeHtml(item.desc || item.grade || '')}</p>
+        ${dateTxt ? `<span class="badge">📅 ${dateTxt}</span>` : ''}
+        ${done ? `<span class="badge done">✅ تم التسليم</span>` : ''}
+      </div>
+      <div class="btns">
+        <button type="button" class="action-btn" data-act="open">${url ? '🔗 فتح' : '👁️ عرض'}</button>
+        ${type === 'homework' ? `<button type="button" class="action-btn upload" data-act="upload" data-id="${escapeHtml(item.id)}">📤 ${done ? 'استبدال حلّي' : 'رفع حلّي'}</button>` : ''}
+      </div>
+    </div>`;
+}
+
+let currentContentType = null;
+function showContent(type, noScroll) {
+  currentContentType = type;
+  const section = document.getElementById('contentSection');
+  const title = document.getElementById('contentTitle');
+  const items = document.getElementById('contentItems');
+  const stageCode = currentStudent.gradeShort || currentStudent.grade;
+  const content = getContent();
+  let list = [];
+  let header = '';
+
+  if (type === 'lessons') {
+    list = content.lessons.filter(l => l.grade === stageCode && l.kind !== 'live');
+    header = '🎬 الحصص المسجلة';
+  } else if (type === 'live') {
+    list = content.lessons.filter(l => l.grade === stageCode && l.kind === 'live');
+    header = '🔴 الحصص المباشرة';
+  } else if (type === 'homework') {
+    list = content.homework.filter(h => h.grade === stageCode);
+    header = '📤 الواجبات';
+  } else if (type === 'quiz') {
+    list = content.quiz.filter(q => q.grade === stageCode);
+    header = '📝 الاختبارات';
+  } else if (type === 'stage') {
+    // فلتر صارم بالصف نفسه: طالب G1 مايشوفش محتوى G6
+    list = content.stage.filter(s => s.grade === stageCode);
+    header = '📚 محتوى مرحلتي';
+  }
+
+  title.textContent = header;
+  section.style.display = 'block';
+
+  const top = type === 'homework' ? submissionCardHtml() : '';
+  if (list.length === 0) {
+    items.innerHTML = top + `<div class="empty-state"><div class="icon">📭</div><h4>لا يوجد محتوى متاح حالياً</h4><p>سيتم إضافة المحتوى قريباً إن شاء الله</p></div>`;
+  } else {
+    const mySub = type === 'homework' ? getMySubmission() : null;
+    items.innerHTML = top + list.map(item => itemHtml(item, type, mySub)).join('');
+  }
+
+  if (!noScroll) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* كل الضغطات بتتعامل بـ event delegation: مفيش أي بيانات بتتحط جوه onclick */
+document.getElementById('contentItems').addEventListener('click', e => {
+  const actEl = e.target.closest('[data-act]');
+  const act = actEl ? actEl.dataset.act : '';
+  if (act === 'upload') { e.stopPropagation(); startHomeworkUpload(actEl.dataset.id); return; }
+  if (act === 'del-sub') { deleteMySubmission(); return; }
+  const row = e.target.closest('.item');
+  if (row) openExternal(row.dataset.url);
+});
+
+/* ===== مودال التأكيد (بديل confirm الافتراضي) ===== */
+function confirmDialog(o) {
+  o = o || {};
+  return new Promise(function (resolve) {
+    var ov = document.getElementById('cfOverlay');
+    var ok = document.getElementById('cfOk'), no = document.getElementById('cfNo');
+    document.getElementById('cfIcon').textContent = o.icon || '🌸';
+    document.getElementById('cfTitle').textContent = o.title || 'تأكيد';
+    var body = document.getElementById('cfText');
+    if (o.html) body.innerHTML = o.html; else body.textContent = o.text || '';
+    ok.textContent = o.okText || 'تأكيد';
+    no.textContent = o.cancelText || 'إلغاء';
+    ok.className = 'cf-btn cf-ok' + (o.danger ? ' danger' : '');
+    function done(v) {
+      ov.classList.remove('active');
+      ok.onclick = no.onclick = ov.onclick = null;
+      document.removeEventListener('keydown', onKey);
+      resolve(v);
+    }
+    function onKey(e) { if (e.key === 'Escape') done(false); }
+    ok.onclick = function () { done(true); };
+    no.onclick = function () { done(false); };
+    ov.onclick = function (e) { if (e.target === ov) done(false); };
+    document.addEventListener('keydown', onKey);
+    ov.classList.add('active');
+    setTimeout(function () { ok.focus(); }, 60);
+  });
+}
+
+async function handleLogout() {
+  const ok = await confirmDialog({
+    icon: '🚪', title: 'تسجيل الخروج',
+    text: 'هل أنت متأكد إنك عاوز تسجّل خروج؟',
+    okText: 'تسجيل الخروج', cancelText: 'البقاء في الموقع'
+  });
+  if (ok) {
+    clearToken();
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('userRole');
+    window.location.href = 'index.html';
+  }
+}
+
+/* لما الطالبة ترجع للتبويب: نحدّث المحتوى (واجبات/حصص جديدة) من غير ما تعمل refresh */
+document.addEventListener('visibilitychange', async () => {
+  if (document.visibilityState !== 'visible' || busy || !currentStudent) return;
+  if (Date.now() - lastFetch < 30000) return;
+  try {
+    await fetchData();
+    renderStudentIcons(currentStudent.gradeShort || currentStudent.grade);
+    if (currentContentType) showContent(currentContentType, true);
+  } catch (e) { /* مفيش مشكلة: هنحاول المرة الجاية */ }
+});
+
+loadUserData();
+</script>
+
+
+<script>
+/* ================= PRO ENHANCEMENT: particles + ripple + fade-in ================= */
+(function(){
+  document.body.classList.add('__pro_ready');
+
+
+  document.addEventListener('pointerdown', function(e){
+    var target = e.target.closest('button, .choice-btn, .icon-card, .btn-primary, .btn-logout');
+    if (!target) return;
+    var rect = target.getBoundingClientRect();
+    var span = document.createElement('span');
+    span.className = 'pro-ripple';
+    var size = Math.max(rect.width, rect.height);
+    span.style.width = span.style.height = size + 'px';
+    span.style.left = (e.clientX - rect.left - size / 2) + 'px';
+    span.style.top = (e.clientY - rect.top - size / 2) + 'px';
+    target.appendChild(span);
+    setTimeout(function(){ span.remove(); }, 700);
+  });
+})();
+</script>
+
+
+
+
+</body>
+</html>
