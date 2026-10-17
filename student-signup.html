@@ -274,6 +274,7 @@ body{overflow-x:visible;}
 .success-actions .s-main { color:#fff; background:linear-gradient(135deg,var(--france-blue),var(--france-blue-dark)); box-shadow:0 6px 22px rgba(0,85,164,.35); }
 .success-actions .s-alt { color:var(--france-blue-dark); background:var(--france-blue-light); }
 </style>
+<link rel="stylesheet" href="mobile-fix.css" />
 </head>
 <body>
 
@@ -291,13 +292,13 @@ body{overflow-x:visible;}
       <img src="logo.png" alt="Mme Maha Gafar" class="logo-img" />
     </div>
     <h1>تسجيل <span>طالب جديد</span></h1>
-    <p>✨ انضم لمنصة Mme Maha Gafar لتعلم الفرنسية</p>
+    <p>✨ الانضمام لمنصة Mme Maha Gafar لتعلم الفرنسية</p>
   </div>
 
   <form id="signupForm" onsubmit="handleSignup(event)">
     <div class="form-group">
       <label><span class="icon">👤</span> الاسم الثلاثي</label>
-      <input type="text" id="signupName" placeholder="اكتب اسمك الثلاثي" required autocomplete="name" />
+      <input type="text" id="signupName" placeholder="الاسم الثلاثي" required autocomplete="name" />
     </div>
     <div class="form-group">
       <label><span class="icon">📱</span> رقم الهاتف (واتساب)</label>
@@ -305,7 +306,7 @@ body{overflow-x:visible;}
     </div>
     <div class="form-group">
       <label><span class="icon">🎂</span> العمر</label>
-      <input type="text" id="signupAge" placeholder="اكتب عمرك بالأرقام" required inputmode="numeric" maxlength="2" autocomplete="off" />
+      <input type="text" id="signupAge" placeholder="العمر بالأرقام" required inputmode="numeric" maxlength="2" autocomplete="off" />
     </div>
     <div class="form-group">
       <label><span class="icon">🔒</span> كلمة المرور</label>
@@ -319,7 +320,7 @@ body{overflow-x:visible;}
     <div class="form-group">
       <label><span class="icon">📚</span> المرحلة الدراسية</label>
       <select id="signupGrade" required>
-        <option value="">-- اختر المرحلة --</option>
+        <option value="">-- اختيار المرحلة --</option>
         <optgroup label="المرحلة الابتدائية">
           <option value="G1">الصف الأول الابتدائي (G1)</option>
           <option value="G2">الصف الثاني الابتدائي (G2)</option>
@@ -350,12 +351,12 @@ body{overflow-x:visible;}
   <div class="success-view" id="successView" role="status" aria-live="polite">
     <div class="success-check">✓</div>
     <h2>تم إرسال طلبك ✅</h2>
-    <p>هتتواصل معاك الميس على واتساب بعد ما توافق على حسابك.</p>
+    <p>ستتواصل معك المعلمة على واتساب بعد الموافقة على الحساب.</p>
     <div class="success-info">
       👤 <span id="sucName"></span><br />
       📱 <span id="sucPhone" dir="ltr"></span>
     </div>
-    <p style="font-size:13px;margin-top:12px;">ولو حابب تستعجل، تقدر تتواصل مع المعلمة بنفسك.</p>
+    <p style="font-size:13px;margin-top:12px;">وللاستعجال يمكن التواصل مع المعلمة مباشرة.</p>
     <div class="success-actions">
       <a class="s-main" id="sucContact" href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> تواصل مع المعلمة</a>
       <a class="s-alt" href="student-login.html"><i class="fas fa-right-to-bracket"></i> تسجيل الدخول</a>
@@ -470,14 +471,14 @@ async function handleSignup(e) {
     showMsg(msg, '⚠️ يرجى ملء جميع الحقول', 'error'); return;
   }
   if (!isValidPhone(phone)) {
-    showMsg(msg, '⚠️ رقم الهاتف غير صحيح — اكتب الرقم بشكل صحيح (من 7 إلى 15 رقم)', 'error'); return;
+    showMsg(msg, '⚠️ رقم الهاتف غير صحيح — يرجى كتابة الرقم بشكل صحيح (من 7 إلى 15 رقم)', 'error'); return;
   }
   const age = /^\d{1,2}$/.test(ageRaw) ? parseInt(ageRaw, 10) : NaN;
   if (isNaN(age) || age < 3 || age > 80) {
     showMsg(msg, '⚠️ يرجى إدخال عمر صحيح (من 3 إلى 80)', 'error'); return;
   }
   if (!validName(name)) {
-    showMsg(msg, '⚠️ اكتب اسمك بالكامل (كلمتين على الأقل، من غير أرقام)', 'error'); return;
+    showMsg(msg, '⚠️ يرجى كتابة الاسم بالكامل (كلمتين على الأقل، من غير أرقام)', 'error'); return;
   }
   if (password.length < 6) {
     showMsg(msg, '⚠️ كلمة المرور لازم تكون 6 أحرف على الأقل', 'error'); return;
@@ -499,8 +500,8 @@ async function handleSignup(e) {
 
   // لا يوجد دخول تلقائي: لازم المعلمة توافق الأول
   clearToken();
-  localStorage.removeItem('currentUser');
-  localStorage.removeItem('userRole');
+  safeRemove('currentUser');
+  safeRemove('userRole');
 
   showSuccess(name, phone);
 }

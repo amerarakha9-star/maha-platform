@@ -6,7 +6,6 @@
 <title>منصة Mme Maha Gafar التعليمية | لوحة تحكم المعلمة</title>
 <link rel="icon" type="image/png" href="logo.png" />
 <link rel="apple-touch-icon" href="logo.png" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
 <style>
@@ -196,6 +195,7 @@ body {
 .icon-card.homework .icon-wrapper { background: linear-gradient(135deg, #FF5252, var(--france-red-dark)); color: white; }
 .icon-card.quiz .icon-wrapper { background: linear-gradient(135deg, #FFCDD2, var(--france-red)); color: white; }
 .icon-card.students .icon-wrapper { background: linear-gradient(135deg, #FF8A80, var(--france-red)); color: white; }
+.icon-card.content .icon-wrapper { background: linear-gradient(135deg, #FFAB91, var(--france-red-dark)); color: white; }
 .icon-card.courses .icon-wrapper { background: linear-gradient(135deg, #A29BFE, #6C5CE7); color: white; }
 
 .shine-sweep {
@@ -494,7 +494,7 @@ input:focus, select:focus, textarea:focus {
 .page-view .students-table{min-width:560px;}
 
 /* ================= FULL-WIDTH LAYOUT + BIG CARDS + WHATSAPP ================= */
-.main-content { max-width: none; padding: 0 3vw; margin: 24px auto; }
+.main-content { max-width: 1600px; padding: 0 3vw; margin: 24px auto; }
 .grid-icons.wide4 {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: clamp(14px, 2vw, 32px);
@@ -517,6 +517,13 @@ input:focus, select:focus, textarea:focus {
 .grid-icons.wide4 .icon-card .sub, .grid-icons.wide-auto .icon-card .sub { font-size: clamp(12px, 1.1vw, 15px); margin-top: 6px; }
 .welcome-section { padding: clamp(20px, 2.5vw, 36px) clamp(20px, 3vw, 48px); }
 
+/* شاشة الصف: 5 أيقونات */
+.grid-icons.wide4.wide5 { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(10px, 1.4vw, 24px); }
+.grid-icons.wide4.wide5 .icon-card .title { font-size: clamp(15px, 1.4vw, 22px); }
+@media (max-width: 1024px) {
+  .grid-icons.wide4.wide5 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-icons.wide4.wide5 .icon-card:last-child:nth-child(odd) { grid-column: 1 / -1; }
+}
 /* tablet */
 @media (max-width: 1024px) {
   .grid-icons.wide4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -723,7 +730,50 @@ body{overflow-x:visible;}
 .backup-age { margin:12px 0 4px; padding:10px 14px; border-radius:14px; font-size:13px; font-weight:700; background:#E8F5E9; color:#1B5E20; border:1px solid #C8E6C9; }
 .backup-age.warn { background:#FFF8E1; color:#8a5a00; border-color:#FFE3A3; }
 .backup-age.neutral { background:#F3F6FA; color:#5b6b7d; border-color:#E3E8EE; }
+
+/* ===== قائمة كل الطلاب (الصفحة الرئيسية) ===== */
+.table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%; }
+#homeStudentsCard .students-table { min-width:820px; }
+#homeStudentsCard .card-title { margin:0; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.st-btn.st-view { background:#E8F5E9; color:#2E7D32; margin-left:0; }
+.st-btn.st-view:hover { background:#2E7D32; color:#fff; }
+
+/* ===== تسليمات الواجبات بأسماء الطلبة ===== */
+.hw-block { background:#FFF5F5; border:1px solid #FFCDD2; border-radius:14px; margin-bottom:14px; overflow:hidden; }
+.page-view .item-list .hw-block > .item { margin:0; border:none; border-radius:0; background:transparent; }
+.subs-box { border-top:1px dashed #FFCDD2; background:#fff; }
+.subs-box summary { cursor:pointer; padding:12px 16px; font-weight:800; font-size:14px; color:#8a2b2b; display:flex; align-items:center; gap:10px; flex-wrap:wrap; list-style:none; }
+.subs-box summary::-webkit-details-marker { display:none; }
+.subs-box summary::before { content:'◀'; font-size:11px; transition:transform .25s ease; }
+.subs-box[open] summary::before { transform:rotate(-90deg); }
+.subs-list { padding:0 16px 14px; display:flex; flex-direction:column; gap:8px; }
+.sub-row { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; background:#F4FBF5; border:1px solid #C8E6C9; border-radius:12px; padding:10px 14px; }
+.sub-who { min-width:0; flex:1 1 200px; }
+.sub-who b { display:block; color:var(--text-dark); font-size:14.5px; overflow-wrap:anywhere; }
+.sub-who small { display:block; color:var(--text-muted); font-size:12px; margin-top:2px; }
+.sub-btns { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+.rv-select { border:2px solid #FFE0A3; background:#FFF8E1; color:#8a5a00; border-radius:60px; padding:5px 10px; font-family:inherit; font-weight:800; font-size:12px; cursor:pointer; }
+.rv-select.rv-accepted { border-color:#A5D6A7; background:#E8F5E9; color:#1B5E20; }
+.rv-select.rv-redo { border-color:#EF9A9A; background:#FFEBEE; color:#B71C1C; }
+.subs-missing { margin:4px 0 0; padding:8px 12px; border-radius:12px; background:#FFF8E1; color:#8a5a00; font-size:12.5px; font-weight:700; line-height:1.9; overflow-wrap:anywhere; }
+.subs-empty { color:#999; font-size:13px; padding:4px 2px 10px; }
+
+/* ===== الجداول على الموبايل: كل طالب كارت ===== */
+@media (max-width:700px){
+  .students-table, .students-table tbody, .students-table tr, .students-table td { display:block; width:100%; min-width:0 !important; }
+  .students-table { font-size:13px; }
+  .students-table thead { display:none; }
+  .students-table tr { background:#fff; border:1px solid rgba(239,65,53,.2); border-radius:16px; margin-bottom:12px; padding:8px 14px; box-shadow:0 3px 12px rgba(239,65,53,.07); }
+  .students-table td { display:flex; justify-content:space-between; align-items:center; gap:10px; border:none; padding:6px 0; white-space:normal; text-align:left; }
+  .students-table td::before { content:attr(data-label); font-weight:800; color:#8a2b2b; flex-shrink:0; }
+  .students-table td.empty-row { display:block; text-align:center; }
+  .students-table td.empty-row::before { content:none; }
+  .students-table td[data-label="إجراء"] { flex-wrap:wrap; justify-content:flex-start; }
+  .students-table td[data-label="إجراء"]::before { width:100%; }
+  #homeStudentsCard .students-table, .page-view .students-table { min-width:0 !important; }
+}
 </style>
+<link rel="stylesheet" href="mobile-fix.css" />
 </head>
 <body>
 
@@ -756,7 +806,7 @@ body{overflow-x:visible;}
     <p>📌 لوحة التحكم الخاصة بكِ — اختاري المرحلة أو الكورسات</p>
 
     <div class="stats-row">
-      <div class="stat-card">
+      <div class="stat-card clickable" role="button" tabindex="0" title="عرض كل الطلاب" onclick="openAllStudentsView()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openAllStudentsView();}">
         <span class="number" id="studentCount">0</span>
         <span class="label">👨‍🎓 طالب مسجل</span>
       </div>
@@ -856,12 +906,18 @@ body{overflow-x:visible;}
       <button class="back-view-btn" id="gradeBackBtn" onclick="backFromGrade()">→ رجوع</button>
       <h3 class="view-title" id="gradeTitle"></h3>
     </div>
-    <div class="grid-icons wide4">
+    <div class="grid-icons wide4 wide5">
       <div class="icon-card students" onclick="openStudentsModal()">
         <div class="shine-sweep"></div>
         <div class="icon-wrapper"><i class="fas fa-users"></i></div>
         <div class="title">قائمة الطلاب</div>
         <div class="sub" id="gradeStudentsSub">الطلاب المسجلون</div>
+      </div>
+      <div class="icon-card content" onclick="openContentModal()">
+        <div class="shine-sweep"></div>
+        <div class="icon-wrapper"><i class="fas fa-folder-open"></i></div>
+        <div class="title">المحتوى</div>
+        <div class="sub">روابط تظهر للطلاب</div>
       </div>
       <div class="icon-card lessons" onclick="openLessonsModal()">
         <div class="shine-sweep"></div>
@@ -932,7 +988,7 @@ body{overflow-x:visible;}
       <div class="table-wrap">
         <table class="students-table">
           <thead>
-            <tr><th>#</th><th>الاسم الثلاثي</th><th>رقم الهاتف</th><th>العمر</th><th>تاريخ التسجيل</th><th>الحالة</th><th>الواجب المُسلَّم</th><th>إجراء</th></tr>
+            <tr><th>#</th><th>الاسم الثلاثي</th><th>رقم الهاتف</th><th>العمر</th><th>تاريخ التسجيل</th><th>الحالة</th><th>إجراء</th></tr>
           </thead>
           <tbody id="studentsTableBody"></tbody>
         </table>
@@ -972,6 +1028,33 @@ body{overflow-x:visible;}
     <div class="page-card">
       <div class="card-title">📋 كل الحصص</div>
       <div class="item-list" id="lessonList"></div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE: CONTENT (روابط محتوى الصف) ===== -->
+  <div id="viewContent" class="page-view" style="display:none;">
+    <div class="view-bar">
+      <button class="back-view-btn" onclick="backToGrade()">→ رجوع للصف</button>
+      <h3 class="view-title" id="contentModalTitle">📂 المحتوى</h3>
+    </div>
+    <div class="page-card">
+      <div class="card-title">➕ إضافة / تعديل محتوى</div>
+      <form id="contentForm" onsubmit="saveContentItem(event)">
+        <input type="hidden" id="contentEditId" />
+        <div class="form-group">
+          <label>عنوان المحتوى</label>
+          <input type="text" id="contentTitle" placeholder="مثال: ملخص الوحدة الأولى" required />
+        </div>
+        <div class="form-group">
+          <label>🔗 رابط المحتوى</label>
+          <input type="url" id="contentLink" placeholder="https://..." required />
+        </div>
+        <button type="submit" class="btn-submit" id="contentSubmitBtn">💾 حفظ المحتوى</button>
+      </form>
+    </div>
+    <div class="page-card">
+      <div class="card-title">📋 كل المحتوى</div>
+      <div class="item-list" id="contentList"></div>
     </div>
   </div>
 
@@ -1029,6 +1112,42 @@ body{overflow-x:visible;}
     </div>
   </div>
 
+  <!-- ===== PAGE: ALL STUDENTS ===== -->
+  <div id="viewAllStudents" class="page-view" style="display:none;">
+    <div class="view-bar">
+      <button class="back-view-btn" onclick="showHome()">→ رجوع</button>
+      <h3 class="view-title">👨‍🎓 كل الطلاب</h3>
+    </div>
+      <div class="page-card" id="homeStudentsCard">
+        <div class="students-header">
+          <span class="count-chip">العدد: <b id="homeStudentCount">0</b></span>
+          <button class="btn-download-icon" onclick="downloadHomeExcel()" title="تحميل Excel"><i class="fas fa-download"></i></button>
+        </div>
+        <div class="students-toolbar">
+          <div class="search-box">
+            <i class="fas fa-magnifying-glass"></i>
+            <input type="search" id="homeSearch" placeholder="ابحثي بالاسم أو رقم الهاتف..." oninput="renderHomeStudents()" autocomplete="off" />
+          </div>
+          <select id="homeGradeFilter" onchange="renderHomeStudents()" aria-label="فلتر المرحلة"><option value="all">كل المراحل</option></select>
+          <select id="homeStatusFilter" onchange="renderHomeStudents()" aria-label="فلتر الحالة">
+            <option value="all">كل الحالات</option>
+            <option value="approved">مقبول</option>
+            <option value="pending">بانتظار الموافقة</option>
+            <option value="rejected">مرفوض</option>
+          </select>
+          <button type="button" class="filter-reset" onclick="resetHomeFilters()">↺ مسح</button>
+        </div>
+        <div class="table-wrap">
+          <table class="students-table">
+            <thead>
+              <tr><th>#</th><th>الاسم الثلاثي</th><th>رقم الهاتف</th><th>العمر</th><th>المرحلة</th><th>تاريخ التسجيل</th><th>الحالة</th><th>إجراء</th></tr>
+            </thead>
+            <tbody id="homeStudentsBody"></tbody>
+          </table>
+        </div>
+      </div>
+  </div>
+
   <!-- ===== PAGE: REQUESTS ===== -->
   <div id="viewRequests" class="page-view" style="display:none;">
     <div class="view-bar">
@@ -1069,12 +1188,13 @@ body{overflow-x:visible;}
 
 <script src="api.js"></script>
 <script>
-if (!getToken() || localStorage.getItem('teacherLoggedIn') !== 'true') {
+const _tFlag = safeGet('teacherLoggedIn');
+if (!getToken() || (_tFlag !== null && _tFlag !== 'true')) {
   window.location.href = 'teacher-login.html';
 }
 
 /* ===== البيانات بتتحمّل من Google Sheets وبتتحفظ فيه (مفيش localStorage للبيانات) ===== */
-let DB = { students: [], content: { stage: [], lessons: [], homework: [], quiz: [], whatsapp: {} }, submissions: {} };
+let DB = { students: [], content: { stage: [], lessons: [], homework: [], quiz: [], content: [], whatsapp: {} }, submissions: [] };
 let dataVersion = 0;     // بيزيد مع كل تعديل محلي، عشان التحديث التلقائي مايكتبش فوق تعديل لسه ماتبعتش
 let pendingOps = 0;      // عمليات حفظ لسه في الطريق للسيرفر
 let syncChain = Promise.resolve();
@@ -1107,13 +1227,13 @@ let currentGrade = '';
 let currentLessonKind = 'recorded';
 
 const clone = o => JSON.parse(JSON.stringify(o));
-const ITEM_KINDS = ['lessons', 'homework', 'quiz'];
+const ITEM_KINDS = ['lessons', 'homework', 'quiz', 'content'];
 
 function getStudents() { return clone(DB.students); }
 
 function getContent() {
   const c = clone(DB.content);
-  ['stage','lessons','homework','quiz'].forEach(k => { if (!Array.isArray(c[k])) c[k] = []; });
+  ['stage','lessons','homework','quiz','content'].forEach(k => { if (!Array.isArray(c[k])) c[k] = []; });
   if (!c.whatsapp || typeof c.whatsapp !== 'object' || Array.isArray(c.whatsapp)) c.whatsapp = {};
   return c;
 }
@@ -1154,11 +1274,10 @@ async function fetchAll() {
   const num = arr => (arr || []).map(x => Object.assign({}, x, { id: Number(x.id) || x.id }));
   const students = (d.students || []).filter(s => !pendingDeletes[s.phone])
     .map(s => Object.assign({}, s, { gradeShort: s.gradeShort || s.grade }));
-  const submissions = {};
-  Object.keys(d.submissions || {}).forEach(p => { if (!pendingDeletes[p]) submissions[p] = d.submissions[p]; });
+  const submissions = (Array.isArray(d.submissions) ? d.submissions : []).filter(x => !pendingDeletes[x.phone]);
   return {
     students, submissions,
-    content: { stage: [], lessons: num(d.lessons), homework: num(d.homework), quiz: num(d.quiz), whatsapp: d.whatsapp || {} }
+    content: { stage: [], lessons: num(d.lessons), homework: num(d.homework), quiz: num(d.quiz), content: num(d.content), whatsapp: d.whatsapp || {} }
   };
 }
 function applyAll(x) { DB.students = x.students; DB.content = x.content; DB.submissions = x.submissions; }
@@ -1171,12 +1290,13 @@ function rerenderCurrent() {
   if (shown('viewStudents')) renderStudents();
   if (shown('viewLessons')) renderLessonList();
   if (shown('viewQuiz')) renderQuizList();
+  if (shown('viewContent')) renderContentList();
   if (shown('viewHomework')) renderHomeworkList();
   if (shown('viewGrade')) { updateGradeStudentsSub(); renderWhatsapp(); }
 }
 
 /* تحديث البيانات (يدوي من زرار 🔄 أو تلقائي كل 40 ثانية) لحد ما طلبات جديدة توصل من أجهزة تانية */
-const dataSig = () => DB.students.map(s => s.phone + ':' + (s.status || '')).join('|') + '#' + Object.keys(DB.submissions).sort().join(',');
+const dataSig = () => DB.students.map(s => s.phone + ':' + (s.status || '')).join('|') + '#' + DB.submissions.map(x => x.phone + ':' + x.homeworkId + ':' + x.date + ':' + (x.review || '')).sort().join(',');
 async function refreshData(manual) {
   if (pendingOps > 0 || Object.keys(pendingDeletes).length) {
     if (manual) showToast('⏳ استني لحظة، بيتم حفظ تعديلاتك', 'info');
@@ -1199,12 +1319,13 @@ async function refreshData(manual) {
     onReqCheck();
   }
   if (shown('viewStudents')) renderStudents();
+  if (shown('viewHomework')) renderHomeworkList();
   if (shown('viewGrade')) updateGradeStudentsSub();
 }
 
 window.addEventListener('beforeunload', e => { if (pendingOps > 0) { e.preventDefault(); e.returnValue = ''; } });
 window.addEventListener('pagehide', () => {
-  Object.keys(pendingDeletes).forEach(p => { clearTimeout(pendingDeletes[p]); delete pendingDeletes[p]; API.deleteStudent(p).catch(() => {}); });
+  Object.keys(pendingDeletes).forEach(p => { clearTimeout(pendingDeletes[p]); delete pendingDeletes[p]; API.deleteStudentOnLeave(p).catch(() => {}); });
 });
 
 function escapeHtml(str) {
@@ -1226,12 +1347,24 @@ function normSearch(s) {
     .replace(/\s+/g, ' ').trim();
 }
 
-/* تسليمات الواجبات (بيرفعها الطالب، ملف واحد لكل طالب، والملف نفسه محفوظ في Google Drive) */
+/* تسليمات الواجبات: كل عنصر = (طالب + واجب) والملف نفسه PDF محفوظ في Google Drive */
 function getSubmissions() { return clone(DB.submissions); }
-async function downloadSubmission(phone) {
-  if (!DB.submissions[phone]) { showToast('📭 لا يوجد واجب مُسلَّم', 'info'); return; }
+const REVIEW_LABEL = { pending: '⏳ قيد المراجعة', accepted: '✅ تم القبول', redo: '🔁 يحتاج إعادة' };
+function reviewOf(sb) { return sb && REVIEW_LABEL[sb.review] ? sb.review : 'pending'; }
+function setReview(phone, hwId, review) {
+  const sb = DB.submissions.find(x => x.phone === phone && String(x.homeworkId) === String(hwId));
+  if (!sb || !REVIEW_LABEL[review]) return;
+  sb.review = review;
+  queueSync(() => API.setReview(phone, String(hwId), review));
+  if (document.getElementById('viewHomework').style.display === 'block') renderHomeworkList();
+  showToast('تم تحديث حالة التسليم: ' + REVIEW_LABEL[review], 'success');
+}
+function viewSubmission(phone, hwId) {
+  API.viewSubmission(phone, hwId).catch(e => showToast('⚠️ ' + escapeHtml(e.message), 'error'));
+}
+async function downloadSubmission(phone, hwId) {
   showToast('📥 جاري تحميل الواجب...', 'info');
-  try { await API.downloadSubmission(phone); }
+  try { await API.downloadSubmission(phone, hwId); }
   catch (e) { showToast('⚠️ ' + escapeHtml(e.message), 'error'); }
 }
 
@@ -1316,8 +1449,8 @@ async function handleLogout() {
   });
   if (ok) {
     clearToken();
-    localStorage.removeItem('teacherLoggedIn');
-    localStorage.removeItem('userRole');
+    safeRemove('teacherLoggedIn');
+    safeRemove('userRole');
     window.location.href = 'index.html';
   }
 }
@@ -1332,13 +1465,15 @@ function routeForView(id) {
     case 'viewStudents': return 'grade/' + currentGrade + '/students';
     case 'viewLessons':  return 'grade/' + currentGrade + '/lessons';
     case 'viewQuiz':     return 'grade/' + currentGrade + '/quiz';
+    case 'viewContent':  return 'grade/' + currentGrade + '/content';
     case 'viewHomework': return 'grade/' + currentGrade + '/homework';
     case 'viewRequests': return 'requests';
+    case 'viewAllStudents': return 'students';
     default:             return 'home';
   }
 }
 function showView(id) {
-  ['viewHome','viewGrades','viewGrade','viewStudents','viewLessons','viewQuiz','viewHomework','viewRequests'].forEach(v => {
+  ['viewHome','viewGrades','viewGrade','viewStudents','viewLessons','viewContent','viewQuiz','viewHomework','viewRequests','viewAllStudents'].forEach(v => {
     document.getElementById(v).style.display = (v === id) ? 'block' : 'none';
   });
   const h = '#/' + routeForView(id);
@@ -1365,10 +1500,13 @@ function applyRoute() {
       openGrade(b);
       if (c === 'students') openStudentsModal();
       else if (c === 'lessons') openLessonsModal();
+      else if (c === 'content') openContentModal();
       else if (c === 'quiz') openQuizModal();
       else if (c === 'homework') openHomeworkModal();
     } else if (a === 'requests') {
       openRequestsView();
+    } else if (a === 'students') {
+      openAllStudentsView();
     } else {
       showHome();
     }
@@ -1457,6 +1595,7 @@ function updateTotalCount() {
   animateCounter(document.getElementById('statCourses'), by.courses);
   animateCounter(document.getElementById('statPending'), pendingStudents().length);
   updatePendingBadge();
+  renderHomeStudents();
 }
 
 function updateGradeStudentsSub() {
@@ -1466,6 +1605,7 @@ function updateGradeStudentsSub() {
     list.length + ' طالب' + (pending ? ' • ' + pending + ' بانتظار الموافقة' : ' مسجل');
 }
 
+function openAllStudentsView() { renderHomeStudents(); showView('viewAllStudents'); refreshData(false); }
 function openRequestsView() { renderRequests(); showView('viewRequests'); refreshData(false); }
 
 function renderRequests() {
@@ -1579,54 +1719,100 @@ function resetStudentFilters() {
   renderStudents();
 }
 
+/* صف طالب واحد (بيستخدمه جدول الصف وجدول الصفحة الرئيسية) */
+function studentRowHtml(s, i, withGrade) {
+  const st = studentStatus(s);
+  const p = escapeHtml(s.phone);
+  const code = s.gradeShort || s.grade;
+  const actions =
+    (st !== 'approved' ? `<button class="st-btn st-ok" data-phone="${p}" onclick="setStudentStatus(this.dataset.phone,'approved')">✅ قبول</button>` : '') +
+    (st === 'pending' ? `<button class="st-btn st-no" data-phone="${p}" onclick="setStudentStatus(this.dataset.phone,'rejected')">❌ رفض</button>` : '') +
+    (st === 'approved' ? `<button class="st-btn st-no" data-phone="${p}" onclick="setStudentStatus(this.dataset.phone,'rejected')">⛔ إيقاف</button>` : '');
+  return `
+    <tr>
+      <td data-label="#">${i + 1}</td>
+      <td data-label="الاسم">${escapeHtml(s.name)}</td>
+      <td data-label="الهاتف" dir="ltr" style="text-align:right">${p}</td>
+      <td data-label="العمر">${s.age ? `<span class="age-tag">${escapeHtml(s.age)} سنة</span>` : '-'}</td>
+      ${withGrade ? `<td data-label="المرحلة"><span class="grade-tag">${escapeHtml(code || '-')}</span></td>` : ''}
+      <td data-label="التسجيل">${s.joined ? new Date(s.joined).toLocaleDateString('ar-EG') : '-'}</td>
+      <td data-label="الحالة"><span class="st-tag ${st}">${STATUS_LABEL[st]}</span></td>
+      <td data-label="إجراء">${actions}<button class="delete-student-btn" data-phone="${p}" onclick="deleteStudent(this.dataset.phone)">🗑️ حذف</button></td>
+    </tr>`;
+}
+
+function filterStudents(list, q, f) {
+  const qn = normSearch(q), qPhone = qn.replace(/\s+/g, '');
+  return list.filter(s => {
+    if (f !== 'all' && studentStatus(s) !== f) return false;
+    if (!qn) return true;
+    return normSearch(s.name).includes(qn) || normSearch(s.phone).includes(qPhone);
+  });
+}
+
 function renderStudents() {
   const all = studentsOfGrade();
-  const q = normSearch(document.getElementById('studentSearch').value);
-  const qPhone = q.replace(/\s+/g, '');
   const f = document.getElementById('studentStatusFilter').value;
-  const students = all.filter(s => {
-    if (f !== 'all' && studentStatus(s) !== f) return false;
-    if (!q) return true;
-    return normSearch(s.name).includes(q) || normSearch(s.phone).includes(qPhone);
-  });
-  const filtering = !!q || f !== 'all';
+  const q = document.getElementById('studentSearch').value;
+  const students = filterStudents(all, q, f);
+  const filtering = !!normSearch(q) || f !== 'all';
 
   document.getElementById('gradeStudentCount').textContent = filtering ? (students.length + ' من ' + all.length) : all.length;
   const tbody = document.getElementById('studentsTableBody');
 
   if (all.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="8" class="empty-row">📭 لا يوجد طلاب مسجلين في هذا الصف</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" class="empty-row">📭 لا يوجد طلاب مسجلين في هذا الصف</td></tr>';
     return;
   }
   if (students.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="empty-row">🔍 لا توجد نتائج مطابقة للبحث أو الفلتر</td></tr>';
+    return;
+  }
+  tbody.innerHTML = students.map((s, i) => studentRowHtml(s, i, false)).join('');
+}
+
+/* ===== قائمة كل الطلاب في الصفحة الرئيسية ===== */
+function homeFiltered() {
+  const g = document.getElementById('homeGradeFilter').value;
+  let all = getStudents();
+  if (g !== 'all') all = all.filter(s => (s.gradeShort || s.grade) === g);
+  all.sort((a, b) => String(b.joined || '').localeCompare(String(a.joined || '')));   // الأحدث الأول
+  return { all, shown: filterStudents(all, document.getElementById('homeSearch').value, document.getElementById('homeStatusFilter').value) };
+}
+
+function renderHomeStudents() {
+  const tbody = document.getElementById('homeStudentsBody');
+  if (!tbody) return;
+  const { all, shown } = homeFiltered();
+  const filtering = !!normSearch(document.getElementById('homeSearch').value) ||
+    document.getElementById('homeStatusFilter').value !== 'all' || document.getElementById('homeGradeFilter').value !== 'all';
+  document.getElementById('homeStudentCount').textContent = filtering ? (shown.length + ' من ' + getStudents().length) : getStudents().length;
+
+  if (getStudents().length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" class="empty-row">📭 لسه مفيش طلاب مسجلين</td></tr>';
+    return;
+  }
+  if (shown.length === 0) {
     tbody.innerHTML = '<tr><td colspan="8" class="empty-row">🔍 لا توجد نتائج مطابقة للبحث أو الفلتر</td></tr>';
     return;
   }
+  tbody.innerHTML = shown.map((s, i) => studentRowHtml(s, i, true)).join('');
+}
 
-  const subs = getSubmissions();
-  tbody.innerHTML = students.map((s, i) => {
-    const st = studentStatus(s);
-    const p = escapeHtml(s.phone);
-    const sub = subs[s.phone];
-    const subCell = sub
-      ? `<button class="st-btn st-dl" data-phone="${p}" onclick="downloadSubmission(this.dataset.phone)">📥 تحميل</button><small class="sub-meta">${escapeHtml(sub.homeworkTitle || sub.fileName || '')}${sub.date ? ' • ' + fmtDateAr(sub.date) : ''}</small>`
-      : '<span class="muted-dash">—</span>';
-    const actions =
-      (st !== 'approved' ? `<button class="st-btn st-ok" data-phone="${p}" onclick="setStudentStatus(this.dataset.phone,'approved')">✅ قبول</button>` : '') +
-      (st === 'pending' ? `<button class="st-btn st-no" data-phone="${p}" onclick="setStudentStatus(this.dataset.phone,'rejected')">❌ رفض</button>` : '') +
-      (st === 'approved' ? `<button class="st-btn st-no" data-phone="${p}" onclick="setStudentStatus(this.dataset.phone,'rejected')">⛔ إيقاف</button>` : '');
-    return `
-    <tr>
-      <td>${i + 1}</td>
-      <td>${escapeHtml(s.name)}</td>
-      <td>${p}</td>
-      <td>${s.age ? `<span class="age-tag">${escapeHtml(s.age)} سنة</span>` : '-'}</td>
-      <td>${s.joined ? new Date(s.joined).toLocaleDateString('ar-EG') : '-'}</td>
-      <td><span class="st-tag ${st}">${STATUS_LABEL[st]}</span></td>
-      <td>${subCell}</td>
-      <td>${actions}<button class="delete-student-btn" data-phone="${p}" onclick="deleteStudent(this.dataset.phone)">🗑️ حذف</button></td>
-    </tr>`;
-  }).join('');
+function resetHomeFilters() {
+  document.getElementById('homeSearch').value = '';
+  document.getElementById('homeGradeFilter').value = 'all';
+  document.getElementById('homeStatusFilter').value = 'all';
+  renderHomeStudents();
+}
+
+function fillHomeGradeFilter() {
+  const sel = document.getElementById('homeGradeFilter');
+  Object.keys(GRADE_INFO).forEach(code => {
+    const o = document.createElement('option');
+    o.value = code; o.textContent = GRADE_INFO[code].name + (code === 'COURSES' ? '' : ' (' + code + ')');
+    sel.appendChild(o);
+  });
 }
 
 async function deleteStudent(phone) {
@@ -1635,15 +1821,15 @@ async function deleteStudent(phone) {
   const st = clone(DB.students[idx]);
   const ok = await confirmDialog({
     icon: '🗑️', title: 'حذف الطالب',
-    text: 'هيتم حذف "' + (st.name || '') + '" وواجبه المُسلَّم. لو كان نسي كلمة المرور، بعد الحذف يقدر يسجّل من جديد. وتقدري تتراجعي بعدها مباشرة.',
+    text: 'هيتم حذف "' + (st.name || '') + '" وكل واجباته المُسلَّمة. لو كان نسي كلمة المرور، بعد الحذف يقدر يسجّل من جديد. وتقدري تتراجعي بعدها مباشرة.',
     okText: 'حذف', cancelText: 'إلغاء', danger: true
   });
   if (!ok) return;
   const i2 = DB.students.findIndex(s => s.phone === phone);
   if (i2 < 0) return;
-  const sub = DB.submissions[phone] ? clone(DB.submissions[phone]) : null;
+  const subs = DB.submissions.filter(x => x.phone === phone).map(clone);
   DB.students.splice(i2, 1);
-  delete DB.submissions[phone];
+  DB.submissions = DB.submissions.filter(x => x.phone !== phone);
   dataVersion++;
   // الحذف الفعلي من السيرفر بيتأخر ٨ ثواني عشان زرار "تراجع" يفضل شغال
   pendingDeletes[phone] = setTimeout(() => {
@@ -1656,7 +1842,7 @@ async function deleteStudent(phone) {
     onAction() {
       if (pendingDeletes[phone]) { clearTimeout(pendingDeletes[phone]); delete pendingDeletes[phone]; }
       if (!DB.students.some(s => s.phone === phone)) DB.students.splice(Math.min(i2, DB.students.length), 0, st);
-      if (sub) DB.submissions[phone] = sub;
+      subs.forEach(x => DB.submissions.push(x));
       dataVersion++;
       refreshAfterStatusChange();
       showToast('↩ تم استرجاع الطالب', 'success');
@@ -1664,12 +1850,37 @@ async function deleteStudent(phone) {
   });
 }
 
-function downloadExcel() {
-  const students = studentsOfGrade();
+function downloadExcel() { exportStudentsExcel(studentsOfGrade(), currentGrade); }
+function downloadHomeExcel() { exportStudentsExcel(homeFiltered().shown, 'الكل'); }
+
+/* مكتبة Excel (~900KB) بتتحمّل أول مرة تضغطي على "تصدير" بس، عشان الصفحة تفتح بسرعة */
+let xlsxPromise = null;
+function loadXlsx() {
+  if (window.XLSX) return Promise.resolve();
+  if (!xlsxPromise) {
+    xlsxPromise = new Promise((resolve, reject) => {
+      const sc = document.createElement('script');
+      sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+      sc.onload = () => resolve();
+      sc.onerror = () => { xlsxPromise = null; sc.remove(); reject(new Error('تعذّر تحميل مكتبة Excel، اتأكدي من الإنترنت وحاولي تاني')); };
+      document.head.appendChild(sc);
+    });
+  }
+  return xlsxPromise;
+}
+async function ensureXlsx() {
+  if (window.XLSX) return true;
+  showToast('⏳ جاري تجهيز أداة التصدير...', 'info');
+  try { await loadXlsx(); return true; }
+  catch (e) { showToast('⚠️ ' + escapeHtml(e.message), 'error'); return false; }
+}
+
+async function exportStudentsExcel(students, tag) {
   if (students.length === 0) {
-    showToast('📭 لا يوجد طلاب مسجلين في هذا الصف!', 'error');
+    showToast('📭 لا يوجد طلاب لتحميلهم!', 'error');
     return;
   }
+  if (!(await ensureXlsx())) return;
   const excelData = students.map((s, i) => ({
     'م': i + 1,
     'الاسم الثلاثي': s.name || '',
@@ -1684,7 +1895,7 @@ function downloadExcel() {
   const ws = XLSX.utils.json_to_sheet(excelData);
   ws['!cols'] = [{wch:5},{wch:25},{wch:18},{wch:8},{wch:30},{wch:18},{wch:18},{wch:18}];
   XLSX.utils.book_append_sheet(wb, ws, 'الطلاب');
-  XLSX.writeFile(wb, `طلاب_${currentGrade}_${new Date().toLocaleDateString('ar-EG').replace(/\//g,'-')}.xlsx`);
+  XLSX.writeFile(wb, `طلاب_${tag}_${new Date().toLocaleDateString('ar-EG').replace(/\//g,'-')}.xlsx`);
   showToast(`✅ تم تحميل ${students.length} طالب/ة بنجاح!`, 'success');
 }
 
@@ -1938,18 +2149,22 @@ function renderLinkList(kind, containerId, emptyMsg, editFn, delFn) {
 async function deleteFileItem(kind, id, render) {
   const item = getContent()[kind].find(x => x.id === id);
   if (!item) return;
-  const label = kind === 'quiz' ? 'الاختبار' : 'الواجب';
-  const ok = await confirmDialog({
-    icon: '🗑️', title: 'حذف ' + label,
-    text: 'هيتم حذف ' + label + ' "' + (item.title || '') + '". تقدري تتراجعي بعدها مباشرة.',
-    okText: 'حذف', danger: true
-  });
+  const label = kind === 'quiz' ? 'الاختبار' : kind === 'content' ? 'المحتوى' : 'الواجب';
+  const nSubs = kind === 'homework' ? DB.submissions.filter(sb => String(sb.homeworkId) === String(id)).length : 0;
+  const ok = await confirmDialog(nSubs
+    ? { icon: '🗑️', title: 'حذف ' + label,
+        html: 'هيتم حذف ' + label + ' "' + escapeHtml(item.title || '') + '".<div class="cf-warn">⚠️ كمان هيتحذف ' + nSubs + ' تسليم للطلبة على الواجب ده، ومش هترجع حتى لو ضغطتي تراجع.</div>',
+        okText: 'حذف', danger: true }
+    : { icon: '🗑️', title: 'حذف ' + label,
+        text: 'هيتم حذف ' + label + ' "' + (item.title || '') + '". تقدري تتراجعي بعدها مباشرة.',
+        okText: 'حذف', danger: true });
   if (!ok) return;
   const content = getContent();
   const idx = content[kind].findIndex(x => x.id === id);
   if (idx < 0) return;
   content[kind].splice(idx, 1);
   saveContent(content);
+  if (kind === 'homework') DB.submissions = DB.submissions.filter(sb => String(sb.homeworkId) !== String(id));
   render();
   showToast('🗑️ تم حذف ' + label, 'success', {
     actionText: '↩ تراجع', duration: 8000,
@@ -1967,6 +2182,23 @@ function editLinkItem(kind, prefix, id) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
   showToast('📝 قم بتعديل البيانات ثم اضغط حفظ', 'info');
 }
+
+/* --- المحتوى (روابط بتظهر للطلاب في "محتوى مرحلتي") --- */
+function openContentModal() {
+  document.getElementById('contentModalTitle').textContent = '📂 محتوى ' + GRADE_INFO[currentGrade].name;
+  document.getElementById('contentForm').reset();
+  document.getElementById('contentEditId').value = '';
+  document.getElementById('contentSubmitBtn').textContent = '💾 حفظ المحتوى';
+  renderContentList();
+  showView('viewContent');
+}
+function saveContentItem(e) {
+  e.preventDefault();
+  saveLinkItem({ kind: 'content', prefix: 'content', saveLabel: '💾 حفظ المحتوى', render: renderContentList });
+}
+function renderContentList() { renderLinkList('content', 'contentList', 'لا يوجد محتوى بعد', 'editContent', 'deleteContent'); }
+function editContent(id) { editLinkItem('content', 'content', id); }
+function deleteContent(id) { deleteFileItem('content', id, renderContentList); }
 
 /* --- الاختبارات --- */
 function openQuizModal() {
@@ -1998,7 +2230,54 @@ function saveHomework(e) {
   e.preventDefault();
   saveLinkItem({ kind: 'homework', prefix: 'homework', saveLabel: '💾 حفظ الواجب', render: renderHomeworkList });
 }
-function renderHomeworkList() { renderLinkList('homework', 'homeworkList', 'لا توجد واجبات بعد', 'editHomework', 'deleteHomework'); }
+const openHw = new Set();
+function onSubsToggle(el) { if (el.open) openHw.add(el.dataset.id); else openHw.delete(el.dataset.id); }
+
+function renderHomeworkList() {
+  const list = getContent().homework.filter(x => x.grade === currentGrade);
+  const box = document.getElementById('homeworkList');
+  if (list.length === 0) { box.innerHTML = '<p class="empty-msg">لا توجد واجبات بعد</p>'; return; }
+
+  const subs = getSubmissions();
+  box.innerHTML = list.map(x => {
+    const mine = subs.filter(sb => String(sb.homeworkId) === String(x.id))
+      .sort((a, b) => String(a.studentName || '').localeCompare(String(b.studentName || ''), 'ar'));
+    const rows = mine.map(sb => {
+      const p = escapeHtml(sb.phone), h = escapeHtml(sb.homeworkId);
+      return `
+        <div class="sub-row">
+          <div class="sub-who">
+            <b>👤 ${escapeHtml(sb.studentName || 'طالب محذوف')}</b>
+            <small>📱 ${p}${sb.date ? ' • 📅 ' + fmtDateAr(sb.date) : ''}</small>
+          </div>
+          <div class="sub-btns">
+            <select class="rv-select rv-${reviewOf(sb)}" data-phone="${p}" data-hw="${h}" onchange="setReview(this.dataset.phone,this.dataset.hw,this.value)" aria-label="حالة التسليم">
+              ${Object.keys(REVIEW_LABEL).map(k => `<option value="${k}" ${reviewOf(sb) === k ? 'selected' : ''}>${REVIEW_LABEL[k]}</option>`).join('')}
+            </select>
+            <button class="st-btn st-view" data-phone="${p}" data-hw="${h}" onclick="viewSubmission(this.dataset.phone,this.dataset.hw)">👁️ عرض</button>
+            <button class="st-btn st-dl" data-phone="${p}" data-hw="${h}" onclick="downloadSubmission(this.dataset.phone,this.dataset.hw)">📥 تحميل</button>
+          </div>
+        </div>`;
+    }).join('');
+    return `
+      <div class="hw-block">
+        <div class="item">
+          <div class="info">
+            <h4>${escapeHtml(x.title)}</h4>
+            <p>${new Date(x.date).toLocaleDateString('ar-EG')}</p>
+            ${x.link ? `<span class="file-badge">🔗 رابط</span>` : ''}
+          </div>
+          <div class="actions">${actionButtons('homework', x.id, !!x.link, 'editHomework', 'deleteHomework')}</div>
+        </div>
+        <details class="subs-box" data-id="${escapeHtml(x.id)}" ${openHw.has(String(x.id)) ? 'open' : ''} ontoggle="onSubsToggle(this)">
+          <summary>📥 تسليمات الطلبة <span class="count-chip">${mine.length}</span></summary>
+          <div class="subs-list">
+            ${rows || '<div class="subs-empty">لسه محدش سلّم الواجب ده</div>'}
+          </div>
+        </details>
+      </div>`;
+  }).join('');
+}
 function editHomework(id) { editLinkItem('homework', 'homework', id); }
 function deleteHomework(id) { deleteFileItem('homework', id, renderHomeworkList); }
 
@@ -2024,10 +2303,10 @@ const LAST_BACKUP_KEY = 'mahaLastBackup';
 const BACKUP_STALE_DAYS = 14;
 function hasAnyData() {
   const c = getContent();
-  return getStudents().length > 0 || c.lessons.length > 0 || c.homework.length > 0 || c.quiz.length > 0 || Object.keys(c.whatsapp).length > 0;
+  return getStudents().length > 0 || c.lessons.length > 0 || c.homework.length > 0 || c.quiz.length > 0 || c.content.length > 0 || Object.keys(c.whatsapp).length > 0;
 }
 function daysSinceBackup() {
-  const v = localStorage.getItem(LAST_BACKUP_KEY);
+  const v = safeGet(LAST_BACKUP_KEY);
   const d = v ? new Date(v) : null;
   return d && !isNaN(d) ? Math.floor((Date.now() - d.getTime()) / 86400000) : null;
 }
@@ -2040,7 +2319,8 @@ function updateBackupAge() {
   el.textContent = '✅ بياناتك محفوظة تلقائياً في Google Sheets' + (d === null ? '.' : ' • آخر ملف Excel حمّلتيه ' + agoText(d) + '.');
 }
 
-function exportAllData() {
+async function exportAllData() {
+  if (!(await ensureXlsx())) return;
   const students = getStudents();
   const c = getContent();
   const wb = XLSX.utils.book_new();
@@ -2079,6 +2359,7 @@ function exportAllData() {
   const linkW = [16, 30, 12, 45, 26];
   addSheet(wb, 'الواجبات', linkRows(c.homework), linkCols, linkW);
   addSheet(wb, 'الاختبارات', linkRows(c.quiz), linkCols, linkW);
+  addSheet(wb, 'المحتوى', linkRows(c.content), linkCols, linkW);
 
   addSheet(wb, 'جروبات الواتساب',
     Object.keys(c.whatsapp).map(g => ({
@@ -2106,6 +2387,7 @@ function exportAllData() {
       { 'البند': 'عدد الحصص', 'القيمة': c.lessons.length },
       { 'البند': 'عدد الواجبات', 'القيمة': c.homework.length },
       { 'البند': 'عدد الاختبارات', 'القيمة': c.quiz.length },
+      { 'البند': 'عدد عناصر المحتوى', 'القيمة': c.content.length },
       { 'البند': 'عدد جروبات الواتساب', 'القيمة': Object.keys(c.whatsapp).length }
     ],
     ['البند','القيمة'], [24, 34]);
@@ -2116,7 +2398,7 @@ function exportAllData() {
   XLSX.writeFile(wb, `نسخة_كاملة_لبيانات_الموقع_${stamp}.xlsx`);
 
   document.getElementById('backupSummary').textContent =
-    `✅ تم تحميل: ${students.length} طالب • ${c.lessons.length} حصة • ${c.homework.length} واجب • ${c.quiz.length} اختبار • ${Object.keys(c.whatsapp).length} جروب واتساب`;
+    `✅ تم تحميل: ${students.length} طالب • ${c.lessons.length} حصة • ${c.homework.length} واجب • ${c.quiz.length} اختبار • ${c.content.length} محتوى • ${Object.keys(c.whatsapp).length} جروب واتساب`;
   try { localStorage.setItem(LAST_BACKUP_KEY, new Date().toISOString()); } catch (e) {}
   updateBackupAge();
   showToast('✅ تم تحميل كل البيانات في ملف Excel', 'success');
@@ -2139,6 +2421,7 @@ document.querySelectorAll('.modal-overlay').forEach(overlay => {
     showToast('⚠️ ' + escapeHtml(e.message || 'تعذّر تحميل البيانات'), 'error', { actionText: '🔄 إعادة المحاولة', duration: 12000, onAction: () => location.reload() });
     return;
   }
+  fillHomeGradeFilter();
   updateTotalCount();
   updateBackupAge();
   window.addEventListener('popstate', applyRoute);

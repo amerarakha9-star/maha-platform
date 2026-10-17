@@ -253,6 +253,7 @@ body{overflow-x:visible;}
 .forgot-box b { display:block; font-size:14px; color:var(--france-blue-dark); margin-bottom:2px; }
 .forgot-box .contact-btn { margin-top:8px; padding:8px 18px; font-size:13px; }
 </style>
+<link rel="stylesheet" href="mobile-fix.css" />
 </head>
 <body>
 
@@ -270,7 +271,7 @@ body{overflow-x:visible;}
       <img src="logo.png" alt="Mme Maha Gafar" class="logo-img" />
     </div>
     <h1>تسجيل دخول <span>الطالب</span></h1>
-    <p>🔐 سجل دخولك لمتابعة دروسك</p>
+    <p>🔐 تسجيل الدخول لمتابعة الدروس</p>
   </div>
 
   <form id="loginForm" onsubmit="handleLogin(event)">
@@ -351,13 +352,13 @@ function contactBtnHtml() {
 }
 function showPendingMsg(msg) {
   msg.className = 'message info';
-  msg.innerHTML = '<div>🌸 أهلاً بيك! حسابك وصل للميس وبانتظار موافقتها.</div>' +
-    '<div class="msg-sub">هتقدر تدخل أول ما توافق عليه، ولو احتجت تستعجل تقدر تتواصل معاها.</div>' + contactBtnHtml();
+  msg.innerHTML = '<div>🌸 أهلاً بك! تم استلام طلب حسابك وهو بانتظار موافقة المعلمة.</div>' +
+    '<div class="msg-sub">سيتم السماح بالدخول فور الموافقة، وللاستعجال يمكن التواصل مع المعلمة.</div>' + contactBtnHtml();
 }
 function showRejectedMsg(msg) {
   msg.className = 'message info';
   msg.innerHTML = '<div>🌸 مش قادرين نفتح حسابك دلوقتي.</div>' +
-    '<div class="msg-sub">تواصل مع المعلمة عشان تعرف السبب وتحل الموضوع.</div>' + contactBtnHtml();
+    '<div class="msg-sub">يرجى التواصل مع المعلمة لمعرفة السبب وحل المشكلة.</div>' + contactBtnHtml();
 }
 document.addEventListener('DOMContentLoaded', function () {
   var a = document.getElementById('forgotContact');
@@ -379,7 +380,7 @@ async function handleLogin(e) {
 
   if (!phone || !password) { showMsg(msg, '⚠️ يرجى ملء جميع الحقول', 'error'); return; }
   if (!isValidPhone(phone)) {
-    showMsg(msg, '⚠️ رقم الهاتف غير صحيح — اكتب الرقم بشكل صحيح (من 7 إلى 15 رقم)', 'error'); return;
+    showMsg(msg, '⚠️ رقم الهاتف غير صحيح — يرجى كتابة الرقم بشكل صحيح (من 7 إلى 15 رقم)', 'error'); return;
   }
 
   const label = submitBtn.textContent;
@@ -407,8 +408,8 @@ async function handleLogin(e) {
 
   showMsg(msg, '✅ تم تسجيل الدخول بنجاح! جاري التحويل...', 'success');
   setToken(r.token);
-  localStorage.setItem('currentUser', JSON.stringify(r.student));
-  localStorage.setItem('userRole', 'student');
+  safeSet('currentUser', JSON.stringify(r.student));
+  safeSet('userRole', 'student');
   setTimeout(() => { window.location.href = 'student-dashboard.html'; }, 700);
 }
 

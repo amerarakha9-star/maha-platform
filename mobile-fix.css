@@ -1,0 +1,89 @@
+/* =====================================================================
+   mobile-fix.css — ثبات الموبايل + مقاسات مظبوطة للموبايل واللابتوب
+   بيتحمّل آخر حاجة في <head> في كل الصفحات عشان يغلب أي ستايل تاني
+   ===================================================================== */
+
+/* ---------- كل الشاشات: منع الاهتزاز يمين وشمال ---------- */
+html {
+  -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
+}
+body {
+  max-width: 100%;
+  overflow-x: clip;                 /* clip: يقصّ الزيادة من غير ما يعمل سكرول، فالهيدر الثابت يفضل شغال */
+  overscroll-behavior-x: none;
+  min-height: 100vh;
+  min-height: 100dvh;               /* بيتجاوب مع شريط المتصفح في الموبايل */
+}
+img, svg, video, canvas, iframe { max-width: 100%; }
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
+.item .info, .sub-info, .info { min-width: 0; overflow-wrap: anywhere; }
+
+/* صفحات الدخول والتسجيل: توسيط من غير ما أعلى الصفحة يتقصّ لو المحتوى أطول من الشاشة */
+body { align-items: flex-start; }
+.container { margin: auto; }
+
+/* ---------- الموبايل والتابلت ---------- */
+@media (max-width: 900px), (hover: none) {
+
+  /* 1) وقف كل الحركات المستمرة (الألوان اللي بتتحرك، الوميض، اللمعان، الدوران) */
+  *, *::before, *::after {
+    animation: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  /* 2) الخلفية المتحركة والزينة الطايرة: شيلناها واتثبتت الألوان على تدرّج الصفحة */
+  .blob-bg, .floating-decor, .wa-ring, .shine-sweep { display: none !important; }
+  body { background-attachment: scroll !important; }
+
+  /* 3) كروت أوضح بعد ما شيلنا الـ blur */
+  .container, .welcome-section, .icon-card, .page-card, .content-list .item, .content-list .empty-state,
+  .modal-content, .students-section, .toast { background-color: rgba(255,255,255,.98); }
+
+  /* 4) أي حاجة كانت بتتحرك أو بتكبر عند اللمس */
+  input:focus, select:focus, textarea:focus { transform: none !important; }
+
+  /* 5) منع زووم الآيفون التلقائي لما تضغطي على خانة */
+  input, select, textarea { font-size: 16px !important; }
+
+  /* 6) الإشعارات تاخد عرض الشاشة */
+  #toastContainer { left: 12px !important; right: 12px; top: 12px !important; }
+  .toast { min-width: 0 !important; max-width: 100% !important; }
+
+  /* 7) أحجام وهوامش */
+  .main-content { padding-left: 12px; padding-right: 12px; }
+  .header { padding-left: 14px; padding-right: 14px; }
+  .modal-content, .cf-box { max-width: 100%; }
+}
+
+/* الأجهزة اللي بتشتغل باللمس: ألغي تأثيرات الـ hover اللي بتفضل "عالقة" بعد اللمس وبتحرّك الصفحة */
+@media (hover: none) {
+  *:not(.pw-toggle):hover { transform: none !important; }
+}
+
+/* ---------- الموبايل الصغير ---------- */
+@media (max-width: 480px) {
+  .container { padding: 32px 18px 28px !important; border-radius: 28px !important; }
+  body { padding: 12px !important; }
+  .main-content { margin-top: 14px; }
+  .welcome-section { border-radius: 22px; }
+  .icon-card { border-radius: 22px; }
+}
+
+/* ---------- اللابتوب والشاشات الكبيرة ---------- */
+@media (min-width: 1200px) {
+  .container { max-width: 600px; }
+}
+
+/* ---------- شريط العنوان ثابت في أعلى الصفحة (api.js بيضيف الكلاس hdr-fixed ويحط فراغ بنفس الارتفاع) ---------- */
+html.hdr-fixed .header {
+  position: fixed !important;
+  top: 0; left: 0; right: 0;
+  width: 100%;
+  z-index: 1000;
+  padding-top: max(14px, env(safe-area-inset-top));   /* ماتتغطّاش بنوتش الآيفون */
+}
+html.hdr-fixed { scroll-padding-top: var(--header-h, 80px); }   /* التمرير لعنصر ما يخبّيهوش الشريط */
+#headerSpacer { width: 100%; pointer-events: none; }

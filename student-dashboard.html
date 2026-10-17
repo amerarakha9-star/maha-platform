@@ -432,6 +432,11 @@ body{overflow-x:visible;}
 .content-list .item .action-btn.upload:hover { box-shadow: 0 6px 20px rgba(0,184,148,0.35); }
 .content-list .item .action-btn.danger { background: linear-gradient(135deg, #ff6b6b, #c0392b); }
 .content-list .item .badge.done { background: #E8F5E9; color: #2E7D32; margin-right: 5px; }
+.content-list .badge.rv { display: inline-block; padding: 2px 14px; border-radius: 60px; font-size: 11px; font-weight: 800; margin-top: 6px; margin-right: 5px; }
+.content-list .badge.rv-pending  { background: #FFF3CD; color: #8a5a00; }
+.content-list .badge.rv-accepted { background: #C8E6C9; color: #1B5E20; }
+.content-list .badge.rv-redo     { background: #FFCDD2; color: #B71C1C; }
+.content-list .sub-line.rv-note  { color: #B71C1C; font-weight: 700; }
 .content-list .sub-card {
   background: rgba(255,255,255,0.95); border-radius: 20px; padding: 16px 22px; margin-bottom: 18px;
   display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
@@ -446,6 +451,9 @@ body{overflow-x:visible;}
   background: linear-gradient(135deg, #ff6b6b, #c0392b); color: white; border: none; padding: 8px 18px;
   border-radius: 60px; font-weight: 700; font-size: 13px; cursor: pointer; font-family: inherit;
 }
+.content-list .item .sub-line { margin-top:8px; padding:6px 12px; border-radius:12px; background:#E8F5E9; color:#1B5E20; font-size:12.5px; font-weight:700; line-height:1.8; word-break:break-word; }
+.content-list .item .action-btn.view { background: linear-gradient(135deg, #0984E3, #0055A4); }
+.content-list .item .action-btn.dl { background: linear-gradient(135deg, #6C5CE7, #4834d4); }
 .cf-overlay{--cf-main:#0055A4;--cf-dark:#003366;--cf-soft:#E3F2FD;}
 
 /* ===== مودال التأكيد (بديل confirm) ===== */
@@ -468,6 +476,7 @@ body{overflow-x:visible;}
 @keyframes cfFade{0%{opacity:0;}100%{opacity:1;}}
 @keyframes cfPop{0%{opacity:0;transform:scale(.8);}100%{opacity:1;transform:scale(1);}}
 </style>
+<link rel="stylesheet" href="mobile-fix.css" />
 </head>
 <body>
 
@@ -499,8 +508,8 @@ body{overflow-x:visible;}
 <!-- ===== MAIN ===== -->
 <div class="main-content">
   <div class="welcome-section">
-    <h2>👋 مرحباً بكَ، <span id="welcomeName">طالب</span></h2>
-    <p>📌 اختر من الأيقونات أدناه للوصول إلى المحتوى والخدمات</p>
+    <h2>👋 مرحباً بك، <span id="welcomeName">طالب</span></h2>
+    <p>📌 من الأيقونات أدناه يمكن الوصول إلى المحتوى والخدمات</p>
   </div>
 
   <!-- ===== MY STAGE BANNER ===== -->
@@ -523,7 +532,7 @@ body{overflow-x:visible;}
     <h3 id="contentTitle">📚 المحتوى</h3>
     <div id="contentItems"></div>
   </div>
-  <input type="file" id="hwFileInput" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp" style="display:none;" onchange="onHomeworkFileChosen(this)" />
+  <input type="file" id="hwFileInput" accept=".pdf,application/pdf" style="display:none;" onchange="onHomeworkFileChosen(this)" />
 
   <div class="footer-note">
     <a href="https://www.facebook.com/share/1Go7UTZ6hu/" target="_blank" rel="noopener noreferrer" class="fb-link"><i class="fab fa-facebook"></i> تابعنا على فيسبوك</a> — <span>تعليم الفرنسية بكل حب</span> 🌸
@@ -585,7 +594,7 @@ function getContent() {
   const d = serverData || {};
   const grade = (currentStudent && (currentStudent.gradeShort || currentStudent.grade)) || '';
   return {
-    stage: [],
+    stage: d.content || [],          // "محتوى مرحلتي" = الروابط اللي بترفعها المعلمة من أيقونة المحتوى
     lessons: d.lessons || [],
     homework: d.homework || [],
     quiz: d.quiz || [],
@@ -621,7 +630,7 @@ async function loadUserData() {
   try {
     await fetchData();
   } catch (e) {
-    document.getElementById('stageValue').textContent = 'تعذّر التحميل — حدّثي الصفحة';
+    document.getElementById('stageValue').textContent = 'تعذّر التحميل — برجاء تحديث الصفحة';
     showToast('⚠️ ' + escapeHtml(e.message), 'error');
     return;
   }
@@ -700,16 +709,18 @@ function openExternal(url) {
   window.open(u, '_blank', 'noopener,noreferrer');
 }
 
-/* ===== تسليم الواجبات (ملف واحد لكل طالب، التسليم الجديد بيمسح القديم) ===== */
+/* ===== تسليم الواجبات: PDF فقط — تسليم واحد بس للطالب (الجديد بيمسح القديم)، والملف بيتسجّل باسمه ===== */
 const MAX_FILE_BYTES = 5 * 1024 * 1024; // 5MB
-const ALLOWED_EXT = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png', 'webp'];
 let pendingHwId = null;
 let busy = false;
 
-function getMySubmission() { return (serverData && serverData.submission) || null; }
+function getMySubmissions() { return (serverData && serverData.submissions) || []; }
+const REVIEW_LABEL = { pending: '⏳ قيد المراجعة', accepted: '✅ تم القبول', redo: '🔁 يحتاج إعادة' };
+function reviewOf(sub) { return sub && REVIEW_LABEL[sub.review] ? sub.review : 'pending'; }
+function getSubFor(hwId) { return getMySubmissions().find(s => String(s.homeworkId) === String(hwId)) || null; }
 
 function startHomeworkUpload(hwId) {
-  if (busy) { showToast('⏳ استني لحد ما العملية الحالية تخلص', 'info'); return; }
+  if (busy) { showToast('⏳ برجاء الانتظار حتى تنتهي العملية الحالية', 'info'); return; }
   pendingHwId = hwId;
   const inp = document.getElementById('hwFileInput');
   inp.value = '';
@@ -724,20 +735,31 @@ async function onHomeworkFileChosen(input) {
   if (!file || hwId === null) return;
 
   const ext = (file.name.split('.').pop() || '').toLowerCase();
-  if (!ALLOWED_EXT.includes(ext)) {
-    showToast('نوع الملف غير مدعوم — ارفعي PDF أو Word أو صورة', 'error'); return;
+  if (ext !== 'pdf' || (file.type && file.type !== 'application/pdf')) {
+    showToast('مسموح برفع ملف PDF فقط 📄', 'error'); return;
   }
   if (file.size > MAX_FILE_BYTES) {
-    showToast('الملف أكبر من 5 ميجا، صغّري حجمه وحاولي تاني', 'error'); return;
+    showToast('الملف أكبر من 5 ميجا. برجاء تصغير حجمه ثم إعادة المحاولة', 'error'); return;
+  }
+
+  // لو عنده تسليم لواجب تاني: نأكد إن الجديد هيمسحه
+  const prev = getMySubmissions()[0];
+  if (prev && String(prev.homeworkId) !== String(hwId)) {
+    const ok = await confirmDialog({
+      icon: '📤', title: 'رفع واجب جديد',
+      html: 'التسليم الحالي لواجب «' + escapeHtml(prev.homeworkTitle || '') + '» <b>سيتم مسحه</b> عند رفع الواجب الجديد.<div class="cf-warn">ده لتوفير المساحة. هل تريد المتابعة؟</div>',
+      okText: 'رفع الواجب الجديد', cancelText: 'إلغاء'
+    });
+    if (!ok) return;
   }
 
   busy = true;
-  const hadPrev = !!getMySubmission();
-  showToast('⏳ جاري رفع الواجب، استني لحظات...', 'info');
+  const hadPrev = !!prev;
+  showToast('⏳ جاري رفع الواجب، برجاء الانتظار...', 'info');
   try {
     await API.submitHomework(hwId, file);
     await fetchData();
-    showToast(hadPrev ? '✅ تم رفع الواجب واستبدال تسليمك السابق' : '✅ تم رفع الواجب بنجاح', 'success');
+    showToast(hadPrev ? '✅ تم رفع الواجب الجديد وحذف تسليمك السابق' : '✅ تم رفع الواجب باسمك بنجاح', 'success');
     showContent('homework', true);
   } catch (e) {
     showToast('⚠️ ' + escapeHtml(e.message), 'error');
@@ -746,17 +768,26 @@ async function onHomeworkFileChosen(input) {
   }
 }
 
-async function deleteMySubmission() {
+/* عرض الحل اللي رفعه الطالب (بيتفتح في تبويب جديد). لازم الاستدعاء يحصل مباشرة من الضغطة */
+function viewMyHomework(hwId) {
+  API.viewMySubmission(hwId).catch(e => showToast('⚠️ ' + escapeHtml(e.message), 'error'));
+}
+async function downloadMyHomework(hwId) {
+  try { await API.downloadMySubmission(hwId); }
+  catch (e) { showToast('⚠️ ' + escapeHtml(e.message), 'error'); }
+}
+
+async function deleteMySubmission(hwId) {
   if (busy) return;
   const ok = await confirmDialog({
     icon: '🗑️', title: 'حذف التسليم',
-    text: 'هل تريد حذف تسليمك الحالي؟ تقدر ترفع واجب جديد بعدها.',
+    text: 'هل تريد حذف حلّك لهذا الواجب؟ يمكنك رفع حل جديد بعدها.',
     okText: 'حذف التسليم', cancelText: 'إلغاء', danger: true
   });
   if (!ok) return;
   busy = true;
   try {
-    await API.deleteSubmission();
+    await API.deleteSubmission(hwId);
     await fetchData();
     showToast('🗑️ تم حذف التسليم', 'info');
     showContent('homework', true);
@@ -767,31 +798,40 @@ async function deleteMySubmission() {
   }
 }
 
-function submissionCardHtml() {
-  const sub = getMySubmission();
+function hwSummaryHtml(list) {
+  if (!list.length) return '';
+  const sub = getMySubmissions()[0];
+  const nm = currentStudent && currentStudent.name ? escapeHtml(currentStudent.name) : '';
   if (!sub) {
-    return `<div class="sub-card empty"><div class="sub-ic">📎</div><div class="sub-info"><h4>لم ترفع أي واجب بعد</h4><p>اضغط «📤 رفع حلّي» بجوار الواجب المطلوب (PDF أو Word أو صورة حتى 5 ميجا). رفع واجب جديد بيحذف تسليمك السابق تلقائياً.</p></div></div>`;
+    return `<div class="sub-card empty"><div class="sub-ic">📎</div><div class="sub-info"><h4>لا يوجد واجب مُسلَّم بعد</h4><p>يُرفع الحل بصيغة <b>PDF فقط</b> (حتى 5 ميجا). الملف بيتسجّل باسمك تلقائياً${nm ? ': <b>' + nm + '</b>' : ''}.</p></div></div>`;
   }
-  const d = sub.date ? new Date(sub.date).toLocaleDateString('ar-EG') : '';
-  return `<div class="sub-card"><div class="sub-ic">✅</div><div class="sub-info"><h4>تسليمي الحالي</h4><p>📎 ${escapeHtml(sub.fileName)}${sub.homeworkTitle ? ' • 📌 ' + escapeHtml(sub.homeworkTitle) : ''}${d ? ' • 📅 ' + d : ''}<br>رفع واجب جديد هيحذف هذا التسليم تلقائياً.</p></div><button type="button" class="action-btn" data-act="del-sub">🗑️ حذف</button></div>`;
+  const rv = reviewOf(sub);
+  return `<div class="sub-card"><div class="sub-ic">${rv === 'accepted' ? '🎉' : rv === 'redo' ? '🔁' : '⏳'}</div><div class="sub-info"><h4>تسليمك الحالي: ${escapeHtml(sub.homeworkTitle || '')}</h4><p><span class="badge rv rv-${rv}">${REVIEW_LABEL[rv]}</span><br>📎 ${escapeHtml(sub.fileName)}<br>⚠️ رفع واجب جديد هيمسح هذا التسليم تلقائياً لتوفير المساحة.</p></div></div>`;
 }
 
 /* ===== عرض المحتوى ===== */
-function itemHtml(item, type, mySub) {
+function itemHtml(item, type) {
   const url = safeUrl(item.link);
   const dateTxt = item.date && !isNaN(new Date(item.date)) ? new Date(item.date).toLocaleDateString('ar-EG') : '';
-  const done = type === 'homework' && mySub && String(mySub.homeworkId) === String(item.id);
+  const sub = type === 'homework' ? getSubFor(item.id) : null;
+  const subDate = sub && sub.date && !isNaN(new Date(sub.date)) ? new Date(sub.date).toLocaleDateString('ar-EG') : '';
+  const hid = escapeHtml(item.id);
   return `
     <div class="item" data-url="${escapeHtml(url)}">
       <div class="info">
         <h4>${escapeHtml(item.title)}</h4>
         <p>${escapeHtml(item.desc || item.grade || '')}</p>
         ${dateTxt ? `<span class="badge">📅 ${dateTxt}</span>` : ''}
-        ${done ? `<span class="badge done">✅ تم التسليم</span>` : ''}
+        ${sub ? `<span class="badge done">✅ تم التسليم</span><span class="badge rv rv-${reviewOf(sub)}">${REVIEW_LABEL[reviewOf(sub)]}</span>` : ''}
+        ${sub && reviewOf(sub) === 'redo' ? `<div class="sub-line rv-note">🔁 المعلمة طلبت إعادة الحل — يمكن رفعه من جديد بزر «استبدال حلّي».</div>` : ''}
+        ${sub ? `<div class="sub-line">📎 ${escapeHtml(sub.fileName)}${subDate ? ' • 📅 ' + subDate : ''}</div>` : ''}
       </div>
       <div class="btns">
         <button type="button" class="action-btn" data-act="open">${url ? '🔗 فتح' : '👁️ عرض'}</button>
-        ${type === 'homework' ? `<button type="button" class="action-btn upload" data-act="upload" data-id="${escapeHtml(item.id)}">📤 ${done ? 'استبدال حلّي' : 'رفع حلّي'}</button>` : ''}
+        ${type === 'homework' ? `<button type="button" class="action-btn upload" data-act="upload" data-id="${hid}">📤 ${sub ? 'استبدال حلّي' : 'رفع حلّي (PDF)'}</button>` : ''}
+        ${sub ? `<button type="button" class="action-btn view" data-act="view-sub" data-id="${hid}">👁️ عرض حلّي</button>
+                 <button type="button" class="action-btn dl" data-act="dl-sub" data-id="${hid}">📥 تحميل</button>
+                 <button type="button" class="action-btn danger" data-act="del-sub" data-id="${hid}">🗑️ حذف</button>` : ''}
       </div>
     </div>`;
 }
@@ -828,12 +868,11 @@ function showContent(type, noScroll) {
   title.textContent = header;
   section.style.display = 'block';
 
-  const top = type === 'homework' ? submissionCardHtml() : '';
+  const top = type === 'homework' ? hwSummaryHtml(list) : '';
   if (list.length === 0) {
     items.innerHTML = top + `<div class="empty-state"><div class="icon">📭</div><h4>لا يوجد محتوى متاح حالياً</h4><p>سيتم إضافة المحتوى قريباً إن شاء الله</p></div>`;
   } else {
-    const mySub = type === 'homework' ? getMySubmission() : null;
-    items.innerHTML = top + list.map(item => itemHtml(item, type, mySub)).join('');
+    items.innerHTML = top + list.map(item => itemHtml(item, type)).join('');
   }
 
   if (!noScroll) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -844,7 +883,9 @@ document.getElementById('contentItems').addEventListener('click', e => {
   const actEl = e.target.closest('[data-act]');
   const act = actEl ? actEl.dataset.act : '';
   if (act === 'upload') { e.stopPropagation(); startHomeworkUpload(actEl.dataset.id); return; }
-  if (act === 'del-sub') { deleteMySubmission(); return; }
+  if (act === 'view-sub') { e.stopPropagation(); viewMyHomework(actEl.dataset.id); return; }
+  if (act === 'dl-sub') { e.stopPropagation(); downloadMyHomework(actEl.dataset.id); return; }
+  if (act === 'del-sub') { e.stopPropagation(); deleteMySubmission(actEl.dataset.id); return; }
   const row = e.target.closest('.item');
   if (row) openExternal(row.dataset.url);
 });
@@ -881,18 +922,18 @@ function confirmDialog(o) {
 async function handleLogout() {
   const ok = await confirmDialog({
     icon: '🚪', title: 'تسجيل الخروج',
-    text: 'هل أنت متأكد إنك عاوز تسجّل خروج؟',
+    text: 'هل تريد تسجيل الخروج؟',
     okText: 'تسجيل الخروج', cancelText: 'البقاء في الموقع'
   });
   if (ok) {
     clearToken();
-    localStorage.removeItem('currentUser');
-    localStorage.removeItem('userRole');
+    safeRemove('currentUser');
+    safeRemove('userRole');
     window.location.href = 'index.html';
   }
 }
 
-/* لما الطالبة ترجع للتبويب: نحدّث المحتوى (واجبات/حصص جديدة) من غير ما تعمل refresh */
+/* لما الطالب يرجع للتبويب: نحدّث المحتوى (واجبات/حصص جديدة) من غير ما تعمل refresh */
 document.addEventListener('visibilitychange', async () => {
   if (document.visibilityState !== 'visible' || busy || !currentStudent) return;
   if (Date.now() - lastFetch < 30000) return;
