@@ -14,8 +14,8 @@
 <meta property="og:site_name" content="Mme Maha Gafar" />
 <meta property="og:title" content="منصة Mme Maha Gafar التعليمية" />
 <meta property="og:description" content="تعلّم الفرنسية مع الميس مها: دروس وواجبات واختبارات لكل المراحل." />
-<meta property="og:url" content="https://maha-platform.vercel.app/" />
-<meta property="og:image" content="https://maha-platform.vercel.app/logo.png" />
+<meta property="og:url" content="https://YOUR-SITE.vercel.app/" />
+<meta property="og:image" content="https://YOUR-SITE.vercel.app/logo.png" />
 <meta property="og:image:type" content="image/png" />
 <meta property="og:image:width" content="1256" />
 <meta property="og:image:height" content="1256" />
@@ -23,8 +23,10 @@
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="منصة Mme Maha Gafar التعليمية" />
 <meta name="twitter:description" content="تعلّم الفرنسية مع الميس مها: دروس وواجبات واختبارات لكل المراحل." />
-<meta name="twitter:image" content="https://maha-platform.vercel.app/logo.png" />
+<meta name="twitter:image" content="https://YOUR-SITE.vercel.app/logo.png" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
 <style>
 :root {
@@ -39,7 +41,7 @@
   --text-muted: #6B7B8D;
 }
 * { margin:0; padding:0; box-sizing:border-box; font-family:'Cairo', sans-serif; }
-html { width:100%; }
+html { width:100%; scrollbar-gutter:stable; }
 body { width:100%; min-height:100vh; }
 body {
   background: linear-gradient(145deg, var(--white) 0%, var(--france-blue-light) 50%, var(--france-red-light) 100%);
@@ -235,6 +237,34 @@ body{overflow-x:visible;}
 /* ===== French flag (SVG: shows on every device, incl. Windows) ===== */
 .fr-flag{display:inline-block;width:1.45em;height:.97em;vertical-align:-.17em;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.25),0 0 0 1px rgba(0,0,0,.08);margin-inline:.2em}
 .floating-decor.floating-flag{opacity:.22}
+
+/* ===== بادج الملكية R-Tec ===== */
+.page-wrap{position:relative;z-index:2;width:100%;max-width:600px;margin:auto;display:flex;flex-direction:column;align-items:center;gap:18px;}
+.page-wrap .container{margin:0 !important;}
+.rtec-credit{
+  display:flex;align-items:center;gap:14px;direction:ltr;
+  padding:10px 22px 10px 12px;border-radius:22px;
+  border:2px solid transparent;
+  background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,#6EC1FF,#A24BFF);
+  background-origin:border-box;background-clip:padding-box,border-box;
+  box-shadow:0 8px 24px rgba(130,100,255,.18);
+  animation:fadeInUp 1s ease-out .7s both;
+}
+.rtec-credit .rtec-logo{width:84px;height:44px;flex-shrink:0;object-fit:contain;padding-right:14px;border-right:1px solid #d9dde6;box-sizing:content-box;}
+.rtec-credit .rtec-text{display:flex;flex-direction:column;gap:2px;text-align:left;}
+.rtec-credit .rtec-line1{font-size:13px;font-weight:800;color:#2b3445;}
+.rtec-credit .rtec-line2{font-size:11.5px;font-weight:600;color:#6B7B8D;}
+.rtec-logo-link{display:flex;flex-shrink:0;cursor:pointer;transition:transform .25s ease,opacity .25s ease;}
+.rtec-logo-link:hover{transform:scale(1.06);opacity:.9;}
+.rtec-link{color:#0055A4 !important;font-weight:900;text-decoration:none;transition:opacity .2s;}
+.rtec-link:hover{opacity:.75;text-decoration:underline;}
+.rtec-copy{font-size:11.5px;color:#6B7B8D;font-weight:600;direction:ltr;text-align:center;animation:fadeInUp 1s ease-out .9s both;}
+@media (max-width:480px){
+  .rtec-credit{padding:8px 16px 8px 10px;gap:10px;border-radius:18px;}
+  .rtec-credit .rtec-logo{width:68px;height:38px;padding-right:10px;}
+  .rtec-credit .rtec-line1{font-size:12px;}
+  .rtec-credit .rtec-line2{font-size:10.5px;}
+}
 </style>
 <link rel="stylesheet" href="mobile-fix.css" />
 </head>
@@ -249,6 +279,7 @@ body{overflow-x:visible;}
 <div class="floating-decor floating-flag"><svg class="fr-flag" viewBox="0 0 3 2" role="img" aria-label="علم فرنسا"><rect width="1" height="2" fill="#0055A4"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#EF4135"/></svg></div>
 <div class="floating-decor">💫</div>
 
+<div class="page-wrap">
 <div class="container">
   <div class="logo-wrapper">
     <img src="logo.png" alt="Mme Maha Gafar" class="logo-img" />
@@ -268,6 +299,16 @@ body{overflow-x:visible;}
   <div class="footer-note"><a href="https://www.facebook.com/share/1Go7UTZ6hu/" target="_blank" rel="noopener noreferrer" class="fb-link"><i class="fab fa-facebook"></i> تابعنا على فيسبوك</a> — <span>تعليم الفرنسية بكل حب</span> 🌸</div>
 </div>
 
+<!-- بادج الملكية: Designed & Developed by R-Tec -->
+<div class="rtec-credit">
+  <a class="rtec-logo-link" href="https://www.facebook.com/share/1A6XxF6fVm/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="صفحة R-Tec على فيسبوك"><img class="rtec-logo" src="rtec-logo.jpg" alt="R-Tec AI Company" width="84" height="44" /></a>
+  <div class="rtec-text">
+    <div class="rtec-line1">Designed &amp; Developed by <a class="rtec-link" href="https://www.facebook.com/share/1A6XxF6fVm/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer">R-Tec</a></div>
+    <div class="rtec-line2">Eng. Rafik Mohammed · Eng. Amira Rakha</div>
+  </div>
+</div>
+<div class="rtec-copy">© 2026 <a class="rtec-link" href="https://www.facebook.com/share/1A6XxF6fVm/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer">R-Tec</a>. All rights reserved.</div>
+</div>
 
 <script>
 /* ================= PRO ENHANCEMENT: particles + ripple + fade-in ================= */
