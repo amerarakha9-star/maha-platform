@@ -265,6 +265,33 @@ body{overflow-x:visible;}
   .rtec-credit .rtec-line1{font-size:12px;}
   .rtec-credit .rtec-line2{font-size:10.5px;}
 }
+
+/* ===== زرار تحميل التطبيق (عائم) ===== */
+@keyframes appBtnFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-8px);} }
+@keyframes appBtnPulse { 0%{transform:scale(1);opacity:.55;} 100%{transform:scale(1.7);opacity:0;} }
+.app-dl{
+  position:fixed; bottom:18px; left:18px; z-index:50;
+  display:inline-flex; align-items:center; gap:8px;
+  padding:9px 16px 9px 12px; border-radius:60px;
+  background:linear-gradient(135deg,var(--france-blue),var(--france-blue-dark));
+  color:#fff !important; text-decoration:none; font-weight:800; font-size:13px; line-height:1;
+  box-shadow:0 8px 22px rgba(0,85,164,.4);
+  border:2px solid rgba(255,255,255,.7);
+  animation:appBtnFloat 3s ease-in-out infinite;
+}
+.app-dl::before{
+  content:''; position:absolute; inset:-2px; border-radius:60px; z-index:-1;
+  border:2px solid var(--france-blue); animation:appBtnPulse 2.2s ease-out infinite;
+}
+.app-dl .app-dl-ic{
+  width:26px; height:26px; border-radius:50%; background:#fff; color:var(--france-blue);
+  display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0;
+}
+.app-dl:hover{ filter:brightness(1.08); box-shadow:0 12px 28px rgba(0,85,164,.55); }
+@media (max-width:480px){
+  .app-dl{ bottom:12px; left:12px; font-size:12px; padding:8px 14px 8px 10px; }
+  .app-dl .app-dl-ic{ width:24px; height:24px; font-size:12px; }
+}
 </style>
 <link rel="stylesheet" href="mobile-fix.css" />
 </head>
@@ -309,6 +336,12 @@ body{overflow-x:visible;}
 </div>
 <div class="rtec-copy">© 2026 <a class="rtec-link" href="https://www.facebook.com/share/1A6XxF6fVm/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer">R-Tec</a>. All rights reserved.</div>
 </div>
+
+<!-- زرار تحميل التطبيق: تحميل مباشر من Google Drive -->
+<a class="app-dl" href="Apprendre%20le%20fran%C3%A7ais.apk" download="Apprendre-le-francais.apk" rel="noopener" aria-label="حمّل التطبيق">
+  <span class="app-dl-ic"><i class="fas fa-download"></i></span>
+  <span>حمّل التطبيق</span>
+</a>
 
 <script>
 /* ================= PRO ENHANCEMENT: particles + ripple + fade-in ================= */
